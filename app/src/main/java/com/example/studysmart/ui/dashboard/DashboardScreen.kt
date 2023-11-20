@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import com.example.studysmart.R
 import com.example.studysmart.ui.components.CountCard
 import com.example.studysmart.ui.components.SubjectCard
+import com.example.studysmart.ui.components.taskList
 import com.example.studysmart.ui.domain.model.Subject
 
 @Composable
@@ -82,9 +83,13 @@ fun DashboardScreen() {
                 }
             }
 
-            item {
-                UpcomingTaskList(modifier = Modifier.fillMaxWidth())
-            }
+            taskList(
+                sectionHeading = "Upcomming Task",
+                emptyText ="You don't have upcoming task\n"+
+                "Click + in Subject task to add new task",
+                tasks = emptyList()
+            )
+
         }
 
     }
@@ -194,17 +199,4 @@ private fun SubjectCardSection(
     }
 }
 
-
-//UpcomingTaskView
-@Composable
-fun UpcomingTaskList(modifier: Modifier) {
-    Column(modifier = modifier) {
-        Text(
-            text = "UpcomingTask",
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier
-                .padding(12.dp)
-        )
-    }
-}
 
