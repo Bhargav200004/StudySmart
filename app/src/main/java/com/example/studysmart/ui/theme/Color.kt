@@ -63,3 +63,15 @@ val md_theme_dark_shadow = Color(0xFF000000)
 val md_theme_dark_surfaceTint = Color(0xFF8ED980)
 val md_theme_dark_outlineVariant = Color(0xFF42493F)
 val md_theme_dark_scrim = Color(0xFF000000)
+
+
+val Red = Color(0xFFD53A2F)
+val Blue = Color(0xFF2965C9)
+val Green = Color(0xFF1E9651)
+val Orange = Color(0xFFFF9800)
+
+val gradient0 = listOf(Color(0xFFad5389),Color(0xFF3C1053))
+val gradient1 = listOf(Color(0xFF3A6073),Color(0xFF16222A))
+val gradient2 = listOf(Color(0xFFF857A6),Color(0xFFFF5858))
+val gradient3 = listOf(Color(0xFF00D2FF),Color(0xFF3A7BD5))
+val gradient4 = listOf(Color(0xFF99F2C8),Color(0xFF1F4037))
