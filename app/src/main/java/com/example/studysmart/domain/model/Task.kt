@@ -1,4 +1,4 @@
-package com.example.studysmart.ui.domain.model
+package com.example.studysmart.domain.model
 
 data class Task(
     val title : String,
@@ -6,5 +6,7 @@ data class Task(
     val dueDate : Long,
     val priority : Int,
     val relatedToSubject : String,
-    val isCompleted : String
+    val isCompleted : Boolean,
+    val taskSubjectId : Int,
+    val taskId : Int
 )

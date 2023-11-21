@@ -1,4 +1,4 @@
-package com.example.studysmart.ui.domain.model
+package com.example.studysmart.domain.model
 
 import androidx.compose.ui.graphics.Color
 import com.example.studysmart.ui.theme.gradient0
@@ -10,7 +10,8 @@ import com.example.studysmart.ui.theme.gradient4
 data class Subject(
     val name : String,
     val goalHours : String,
-    val colors : List<Color>
+    val colors : List<Color>,
+    val subjectId : Int
 ){
     companion object{
         val subjectCardColor = listOf(
