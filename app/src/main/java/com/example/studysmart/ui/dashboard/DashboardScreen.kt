@@ -158,12 +158,20 @@ fun DashboardScreen() {
 
     )
 
-    var isAddSubjectButton by rememberSaveable {
-        mutableStateOf(false)
-    }
+    var isAddSubjectButton by rememberSaveable { mutableStateOf(false) }
+
+    var subjectName by rememberSaveable { mutableStateOf("") }
+    var goalHour by rememberSaveable { mutableStateOf("") }
+    var selectedColor by rememberSaveable { mutableStateOf(Subject.subjectCardColor.random())}
 
     AddSubjectDialog(
         isOpen = isAddSubjectButton,
+        subjectName = subjectName ,
+        goalHour = goalHour,
+        selectedColor = selectedColor ,
+        onSubjectChange = {subjectName = it},
+        onGoalHourChange = {goalHour = it},
+        onColorChange = {selectedColor = it},
         onDismissRequest = { isAddSubjectButton = false },
         onSaveRequest = { isAddSubjectButton = false}
     )
