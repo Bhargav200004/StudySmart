@@ -33,29 +33,29 @@ import com.example.studysmart.domain.model.Subject
 
 @Composable
 fun AddSubjectDialog(
-    isOpen : Boolean,
-    title : String = "Save/Update",
-    subjectName : String,
-    goalHour : String,
-    selectedColor : List<Color>,
-    onColorChange : (List<Color>) -> Unit,
-    onSubjectChange : (String) -> Unit,
-    onGoalHourChange : (String) -> Unit,
-    onDismissRequest : () -> Unit,
-    onSaveRequest : () -> Unit
+    isOpen: Boolean,
+    title: String = "Save/Update",
+    subjectName: String,
+    goalHour: String,
+    selectedColor: List<Color>,
+    onColorChange: (List<Color>) -> Unit,
+    onSubjectChange: (String) -> Unit,
+    onGoalHourChange: (String) -> Unit,
+    onDismissRequest: () -> Unit,
+    onSaveRequest: () -> Unit
 ) {
 
-    var subjectNameError by rememberSaveable { mutableStateOf<String?>(null)}
-    var goalHourError by rememberSaveable { mutableStateOf<String?>(null)}
+    var subjectNameError by rememberSaveable { mutableStateOf<String?>(null) }
+    var goalHourError by rememberSaveable { mutableStateOf<String?>(null) }
 
-    subjectNameError = when{
+    subjectNameError = when {
         subjectName.isBlank() -> "Please Enter Subject Name"
-        subjectName.length < 1 -> "Subject Name To Short"
+        subjectName.length < 2 -> "Subject Name To Short"
         subjectName.length > 20 -> "Subject Name To Long"
         else -> null
     }
 
-    goalHourError = when{
+    goalHourError = when {
         goalHour.isBlank() -> "Please Enter Goal Study Hour"
         goalHour.toFloatOrNull() == null -> "Invalid Number"
         goalHour.toFloat() < 1f -> "Please set At Least 1 Hour"
@@ -94,19 +94,19 @@ fun AddSubjectDialog(
                     OutlinedTextField(
                         value = subjectName,
                         onValueChange = onSubjectChange,
-                        label = { Text(text = "Subject Name")},
+                        label = { Text(text = "Subject Name") },
                         singleLine = true,
                         isError = subjectNameError != null && subjectName.isNotBlank(),
-                        supportingText = { Text(text = subjectNameError.orEmpty())}
+                        supportingText = { Text(text = subjectNameError.orEmpty()) }
                     )
                     Spacer(modifier = Modifier.height(10.dp))
                     OutlinedTextField(
                         value = goalHour,
                         onValueChange = onGoalHourChange,
-                        label = { Text(text = "Goal Study Hour")},
+                        label = { Text(text = "Goal Study Hour") },
                         singleLine = true,
                         isError = goalHourError != null && goalHour.isNotBlank(),
-                        supportingText = { Text(text = goalHourError.orEmpty())},
+                        supportingText = { Text(text = goalHourError.orEmpty()) },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                     )
                 }
@@ -119,7 +119,7 @@ fun AddSubjectDialog(
             confirmButton = {
                 TextButton(
                     onClick = onSaveRequest,
-                    enabled =subjectNameError == null && goalHourError == null
+                    enabled = subjectNameError == null && goalHourError == null
                 ) {
                     Text(text = "Save")
                 }

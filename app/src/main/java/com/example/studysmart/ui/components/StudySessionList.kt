@@ -34,7 +34,7 @@ fun LazyListScope.studySessionList(
     sessions: List<StudySession>,
     onDeleteClick: (StudySession) -> Unit
 
-    ) {
+) {
     item {
         Text(
             text = sectionHeading,
@@ -66,7 +66,7 @@ fun LazyListScope.studySessionList(
         }
     }
     items(sessions) { studySession ->
-        studySessionCard(
+        StudySessionCard(
             modifier = Modifier
                 .padding(horizontal = 12.dp, vertical = 4.dp),
             session = studySession,
@@ -76,12 +76,12 @@ fun LazyListScope.studySessionList(
 }
 
 @Composable
-private fun studySessionCard(
+private fun StudySessionCard(
     modifier: Modifier = Modifier,
     session: StudySession,
-    onDeleteClick :()  -> Unit
+    onDeleteClick: () -> Unit
 ) {
-    Card(modifier = modifier){
+    Card(modifier = modifier) {
         Row(
             modifier = Modifier
                 .fillMaxWidth(),
@@ -104,7 +104,7 @@ private fun studySessionCard(
                 text = "${session.duration} hr",
                 style = MaterialTheme.typography.bodySmall
             )
-            IconButton(onClick = {onDeleteClick}) {
+            IconButton(onClick = { onDeleteClick() }) {
                 Icon(
                     imageVector = Icons.Default.Delete,
                     contentDescription = "For Image delete"

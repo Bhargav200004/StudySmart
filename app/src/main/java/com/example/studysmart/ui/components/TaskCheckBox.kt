@@ -18,9 +18,9 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun TaskCheckBox(
-    isCompleted : Boolean,
-    boarderColor  : Color,
-    onCheckBoxClick : () -> Unit
+    isCompleted: Boolean,
+    boarderColor: Color,
+    onCheckBoxClick: () -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -29,7 +29,7 @@ fun TaskCheckBox(
             .border(2.dp, boarderColor, CircleShape)
             .clickable { onCheckBoxClick() },
         contentAlignment = Alignment.Center
-    ){
+    ) {
         AnimatedVisibility(visible = isCompleted) {
             Icon(
                 modifier = Modifier

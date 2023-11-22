@@ -41,6 +41,7 @@ import com.example.studysmart.domain.model.Subject
 import com.example.studysmart.domain.model.Task
 import com.example.studysmart.ui.components.AddSubjectDialog
 import com.example.studysmart.ui.components.CountCard
+import com.example.studysmart.ui.components.DeleteDialog
 import com.example.studysmart.ui.components.SubjectCard
 import com.example.studysmart.ui.components.studySessionList
 import com.example.studysmart.ui.components.taskList
@@ -49,11 +50,36 @@ import com.example.studysmart.ui.components.taskList
 fun DashboardScreen() {
 
     val subject = listOf(
-        Subject(name = "Maths", goalHours = "20", colors = Subject.subjectCardColor[0], subjectId = 0),
-        Subject(name = "Physics", goalHours = "5", colors = Subject.subjectCardColor[1] , subjectId = 0),
-        Subject(name = "Chemistry", goalHours = "20", colors = Subject.subjectCardColor[2] , subjectId = 0),
-        Subject(name = "Bio", goalHours = "60", colors = Subject.subjectCardColor[3] ,  subjectId = 0),
-        Subject(name = "DSA", goalHours = "100", colors = Subject.subjectCardColor[4] ,  subjectId = 0)
+        Subject(
+            name = "Maths",
+            goalHours = "20",
+            colors = Subject.subjectCardColor[0],
+            subjectId = 0
+        ),
+        Subject(
+            name = "Physics",
+            goalHours = "5",
+            colors = Subject.subjectCardColor[1],
+            subjectId = 0
+        ),
+        Subject(
+            name = "Chemistry",
+            goalHours = "20",
+            colors = Subject.subjectCardColor[2],
+            subjectId = 0
+        ),
+        Subject(
+            name = "Bio",
+            goalHours = "60",
+            colors = Subject.subjectCardColor[3],
+            subjectId = 0
+        ),
+        Subject(
+            name = "DSA",
+            goalHours = "100",
+            colors = Subject.subjectCardColor[4],
+            subjectId = 0
+        )
     )
 
     val task = listOf(
@@ -159,21 +185,32 @@ fun DashboardScreen() {
     )
 
     var isAddSubjectButton by rememberSaveable { mutableStateOf(false) }
+    var isDeleteButton by rememberSaveable { mutableStateOf(false) }
 
     var subjectName by rememberSaveable { mutableStateOf("") }
     var goalHour by rememberSaveable { mutableStateOf("") }
-    var selectedColor by rememberSaveable { mutableStateOf(Subject.subjectCardColor.random())}
+    var selectedColor by rememberSaveable { mutableStateOf(Subject.subjectCardColor.random()) }
 
     AddSubjectDialog(
         isOpen = isAddSubjectButton,
-        subjectName = subjectName ,
+        subjectName = subjectName,
         goalHour = goalHour,
-        selectedColor = selectedColor ,
-        onSubjectChange = {subjectName = it},
-        onGoalHourChange = {goalHour = it},
-        onColorChange = {selectedColor = it},
+        selectedColor = selectedColor,
+        onSubjectChange = { subjectName = it },
+        onGoalHourChange = { goalHour = it },
+        onColorChange = { selectedColor = it },
         onDismissRequest = { isAddSubjectButton = false },
-        onSaveRequest = { isAddSubjectButton = false}
+        onSaveRequest = { isAddSubjectButton = false }
+    )
+
+
+    DeleteDialog(
+        isOpen = isDeleteButton,
+        title = "Delete Session",
+        bodyText = "Are you sure, you want to delete session? Your study hour will reduce " +
+                "by this session time . this action cannot be undo",
+        onDismissRequest = { isDeleteButton = false },
+        onSaveRequest = { isDeleteButton = false }
     )
 
     Scaffold(
@@ -199,7 +236,7 @@ fun DashboardScreen() {
                 SubjectCardSection(
                     modifier = Modifier.fillMaxWidth(),
                     subjectList = subject,
-                    isIconButtonClick = { isAddSubjectButton = true}
+                    isIconButtonClick = { isAddSubjectButton = true }
                 )
             }
             item {
@@ -209,14 +246,14 @@ fun DashboardScreen() {
                         .fillMaxWidth()
                         .padding(horizontal = 48.dp, vertical = 20.dp)
                 ) {
-                        Text(text = "Start Study Session")
+                    Text(text = "Start Study Session")
                 }
             }
 
             taskList(
                 sectionHeading = "Upcoming Task",
-                emptyText ="You don't have upcoming task\n"+
-                "Click + in Subject task to add new task",
+                emptyText = "You don't have upcoming task\n" +
+                        "Click + in Subject task to add new task",
                 tasks = task,
                 onCheckBoxClick = {},
                 onTaskCardClick = {}
@@ -226,10 +263,10 @@ fun DashboardScreen() {
             }
             studySessionList(
                 sectionHeading = "Resent Study session",
-                emptyText ="You don't have resent study Session\n"+
+                emptyText = "You don't have resent study Session\n" +
                         "Start a study session to begin the recording",
                 sessions = studysessionList,
-                onDeleteClick = {}
+                onDeleteClick = { isDeleteButton = true }
             )
 
         }
@@ -287,8 +324,8 @@ private fun CountCardsSection(
 private fun SubjectCardSection(
     modifier: Modifier,
     subjectList: List<Subject>,
-    emptyText : String = "Your Subject is empty. \n Press + to add the Subject",
-    isIconButtonClick : () -> Unit
+    emptyText: String = "Your Subject is empty. \n Press + to add the Subject",
+    isIconButtonClick: () -> Unit
 ) {
     Column(modifier = modifier) {
         Row(
@@ -303,7 +340,7 @@ private fun SubjectCardSection(
                 modifier = Modifier
                     .padding(start = 12.dp)
             )
-            IconButton(onClick =  isIconButtonClick ) {
+            IconButton(onClick = isIconButtonClick) {
                 Icon(
                     imageVector = Icons.Default.Add,
                     contentDescription = "Add Subject"
@@ -328,9 +365,9 @@ private fun SubjectCardSection(
         }
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(12.dp),
-            contentPadding = PaddingValues(start = 12.dp , end = 12.dp)
-        ){
-            items(subjectList){subject->
+            contentPadding = PaddingValues(start = 12.dp, end = 12.dp)
+        ) {
+            items(subjectList) { subject ->
                 SubjectCard(
                     subjectName = subject.name,
                     gradientColor = subject.colors,
