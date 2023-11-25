@@ -36,9 +36,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.studysmart.R
-import com.example.studysmart.domain.model.StudySession
 import com.example.studysmart.domain.model.Subject
-import com.example.studysmart.domain.model.Task
+import com.example.studysmart.studySessionList
+import com.example.studysmart.subject
+import com.example.studysmart.task
 import com.example.studysmart.ui.components.AddSubjectDialog
 import com.example.studysmart.ui.components.CountCard
 import com.example.studysmart.ui.components.DeleteDialog
@@ -48,141 +49,6 @@ import com.example.studysmart.ui.components.taskList
 
 @Composable
 fun DashboardScreen() {
-
-    val subject = listOf(
-        Subject(
-            name = "Maths",
-            goalHours = "20",
-            colors = Subject.subjectCardColor[0],
-            subjectId = 0
-        ),
-        Subject(
-            name = "Physics",
-            goalHours = "5",
-            colors = Subject.subjectCardColor[1],
-            subjectId = 0
-        ),
-        Subject(
-            name = "Chemistry",
-            goalHours = "20",
-            colors = Subject.subjectCardColor[2],
-            subjectId = 0
-        ),
-        Subject(
-            name = "Bio",
-            goalHours = "60",
-            colors = Subject.subjectCardColor[3],
-            subjectId = 0
-        ),
-        Subject(
-            name = "DSA",
-            goalHours = "100",
-            colors = Subject.subjectCardColor[4],
-            subjectId = 0
-        )
-    )
-
-    val task = listOf(
-        Task(
-            title = "playing",
-            description = "Playing game",
-            dueDate = 1323,
-            priority = 1,
-            relatedToSubject = "physical education",
-            isCompleted = true,
-            taskSubjectId = 0,
-            taskId = 1
-        ),
-        Task(
-            title = "playing",
-            description = "Playing game",
-            dueDate = 1323,
-            priority = 2,
-            relatedToSubject = "physical education",
-            isCompleted = true,
-            taskSubjectId = 0,
-            taskId = 1
-        ),
-        Task(
-            title = "playing",
-            description = "Playing game",
-            dueDate = 1323,
-            priority = 1,
-            relatedToSubject = "physical education",
-            isCompleted = false,
-            taskSubjectId = 0,
-            taskId = 1
-        ),
-        Task(
-            title = "playing",
-            description = "Playing game",
-            dueDate = 1323,
-            priority = 1,
-            relatedToSubject = "physical education",
-            isCompleted = false,
-            taskSubjectId = 0,
-            taskId = 1
-        ),
-        Task(
-            title = "playing",
-            description = "Playing game",
-            dueDate = 1323,
-            priority = 0,
-            relatedToSubject = "physical education",
-            isCompleted = true,
-            taskSubjectId = 0,
-            taskId = 1
-        ),
-        Task(
-            title = "playing",
-            description = "Playing game",
-            dueDate = 1323,
-            priority = 0,
-            relatedToSubject = "physical education",
-            isCompleted = true,
-            taskSubjectId = 0,
-            taskId = 1
-        ),
-    )
-
-    val studysessionList = listOf(
-        StudySession(
-            sessionSubjectId = 1,
-            relatedToSubject = "English",
-            date = 0L,
-            duration = 0L,
-            sessionId = 0,
-        ),
-        StudySession(
-            sessionSubjectId = 1,
-            relatedToSubject = "English",
-            date = 0L,
-            duration = 0L,
-            sessionId = 0,
-        ),
-        StudySession(
-            sessionSubjectId = 1,
-            relatedToSubject = "English",
-            date = 0L,
-            duration = 0L,
-            sessionId = 0,
-        ),
-        StudySession(
-            sessionSubjectId = 1,
-            relatedToSubject = "English",
-            date = 0L,
-            duration = 0L,
-            sessionId = 0,
-        ),
-        StudySession(
-            sessionSubjectId = 1,
-            relatedToSubject = "English",
-            date = 0L,
-            duration = 0L,
-            sessionId = 0,
-        )
-
-    )
 
     var isAddSubjectButton by rememberSaveable { mutableStateOf(false) }
     var isDeleteButton by rememberSaveable { mutableStateOf(false) }
@@ -265,9 +131,8 @@ fun DashboardScreen() {
                 sectionHeading = "Resent Study session",
                 emptyText = "You don't have resent study Session\n" +
                         "Start a study session to begin the recording",
-                sessions = studysessionList,
-                onDeleteClick = { isDeleteButton = true }
-            )
+                sessions = studySessionList
+            ) { isDeleteButton = true }
 
         }
 
