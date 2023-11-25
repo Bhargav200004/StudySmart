@@ -31,15 +31,21 @@ import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.example.studysmart.domain.model.Subject
 import com.example.studysmart.task
 import com.example.studysmart.studySessionList
+import com.example.studysmart.ui.components.AddSubjectDialog
 import com.example.studysmart.ui.components.CountCard
+import com.example.studysmart.ui.components.DeleteDialog
 import com.example.studysmart.ui.components.studySessionList
 import com.example.studysmart.ui.components.taskList
 
@@ -52,13 +58,52 @@ fun SubjectScreen() {
     val isFABExpanded by remember { derivedStateOf { listState.firstVisibleItemIndex == 0 } }
 
 
+    var isEditSubjectButton by rememberSaveable { mutableStateOf(false) }
+    var isDeleteButton by rememberSaveable { mutableStateOf(false) }
+    var isDeleteSubjectButton by rememberSaveable { mutableStateOf(false) }
+
+    var subjectName by rememberSaveable { mutableStateOf("") }
+    var goalHour by rememberSaveable { mutableStateOf("") }
+    var selectedColor by rememberSaveable { mutableStateOf(Subject.subjectCardColor.random()) }
+
+    AddSubjectDialog(
+        isOpen = isEditSubjectButton,
+        subjectName = subjectName,
+        goalHour = goalHour,
+        selectedColor = selectedColor,
+        onSubjectChange = { subjectName = it },
+        onGoalHourChange = { goalHour = it },
+        onColorChange = { selectedColor = it },
+        onDismissRequest = { isEditSubjectButton = false },
+        onSaveRequest = { isEditSubjectButton = false }
+    )
+
+    DeleteDialog(
+        isOpen = isDeleteSubjectButton,
+        title = "Delete Subject",
+        bodyText = "Are you sure, you want to delete Subject All related task" +
+                " and study session will be permanently remove , this action can not be undone. ",
+        onDismissRequest = { isDeleteSubjectButton = false },
+        onSaveRequest = { isDeleteSubjectButton = false }
+    )
+
+
+    DeleteDialog(
+        isOpen = isDeleteButton,
+        title = "Delete Session",
+        bodyText = "Are you sure, you want to delete session? Your study hour will reduce " +
+                "by this session time . this action cannot be undo",
+        onDismissRequest = { isDeleteButton = false },
+        onSaveRequest = { isDeleteButton = false }
+    )
+
     Scaffold(
         topBar = {
             SubjectScreenTopBar(
                 title = "English",
                 onBackButtonClick = {  },
-                onDeleteButtonClick = { },
-                onEditButtonClick = {},
+                onDeleteButtonClick = { isDeleteSubjectButton = true},
+                onEditButtonClick = { isEditSubjectButton = true},
                 scrollBehavior = scrollBehavior
             )
         },
@@ -121,7 +166,7 @@ fun SubjectScreen() {
                 emptyText = "You don't have resent study Session\n" +
                         "Start a study session to begin the recording",
                 sessions = studySessionList,
-                onDeleteClick = {}
+                onDeleteClick = {isDeleteButton = true}
             )
 
         }
