@@ -6,8 +6,7 @@ import androidx.activity.compose.setContent
 import com.example.studysmart.domain.model.StudySession
 import com.example.studysmart.domain.model.Subject
 import com.example.studysmart.domain.model.Task
-import com.example.studysmart.ui.subject.SubjectScreen
-import com.example.studysmart.ui.task.TaskScreen
+import com.example.studysmart.ui.session.SessionScreen
 import com.example.studysmart.ui.theme.StudySmartTheme
 
 class MainActivity : ComponentActivity() {
@@ -16,7 +15,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             StudySmartTheme {
                 // A surface container using the 'background' color from the theme
-                TaskScreen()
+                SessionScreen()
             }
         }
     }
