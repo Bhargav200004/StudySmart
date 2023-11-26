@@ -29,9 +29,12 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -39,19 +42,37 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.studysmart.subject
 import com.example.studysmart.ui.components.DeleteDialog
+import com.example.studysmart.ui.components.SubjectListBottomSheet
 import com.example.studysmart.ui.components.TaskCheckBox
+import com.example.studysmart.ui.components.TaskDatePickerDialog
 import com.example.studysmart.ui.theme.Green
 import com.example.studysmart.ui.theme.Red
 import com.example.studysmart.util.Priority
+import com.example.studysmart.util.changeMillsToDateString
+import kotlinx.coroutines.launch
+import java.time.Instant
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TaskScreen() {
+
+    val scope = rememberCoroutineScope()
 
     var title by rememberSaveable { mutableStateOf("") }
     var description by rememberSaveable { mutableStateOf("") }
 
     var isDeleteDialog by rememberSaveable { mutableStateOf(false)}
+
+    val sheetState = rememberModalBottomSheetState()
+    var isDismissSubjectListBottomSheet by rememberSaveable { mutableStateOf(false)}
+
+    var isOpenDatePicker by rememberSaveable { mutableStateOf(false) }
+    val datePickerState = rememberDatePickerState(
+        initialSelectedDateMillis = Instant.now().toEpochMilli()
+    )
+
 
 
     var taskTitleError by rememberSaveable { mutableStateOf<String?>(null) }
@@ -70,6 +91,27 @@ fun TaskScreen() {
         onDismissRequest = { isDeleteDialog = false },
         onSaveRequest = {isDeleteDialog = false}
     )
+
+    TaskDatePickerDialog(
+        state = datePickerState,
+        isOpen = isOpenDatePicker,
+        onDismissRequest = { isOpenDatePicker = false },
+        onConfirmButtonClicked = { isOpenDatePicker = false }
+    )
+
+    SubjectListBottomSheet(
+        sheetState = sheetState,
+        isOpen = isDismissSubjectListBottomSheet,
+        subjects = subject,
+        onSubjectClick ={isDismissSubjectListBottomSheet = false},
+        onDismissRequest = {
+            scope.launch {
+                sheetState.hide()
+            }.invokeOnCompletion {
+                if (!sheetState.isVisible) isDismissSubjectListBottomSheet = false
+            }
+        })
+
 
 
     Scaffold(
@@ -120,10 +162,10 @@ fun TaskScreen() {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = "30 Aug 20022",
+                    text = datePickerState.selectedDateMillis.changeMillsToDateString(),
                     style = MaterialTheme.typography.bodyLarge
                 )
-                IconButton(onClick = { /*TODO*/ }) {
+                IconButton(onClick = { isOpenDatePicker = true  }) {
                     Icon(
                         imageVector = Icons.Default.DateRange,
                         contentDescription = "Date Button"
@@ -170,7 +212,7 @@ fun TaskScreen() {
                     text = "English",
                     style = MaterialTheme.typography.bodyLarge
                 )
-                IconButton(onClick = { /*TODO*/ }) {
+                IconButton(onClick = { isDismissSubjectListBottomSheet = true }) {
                     Icon(
                         imageVector = Icons.Default.ArrowDropDown,
                         contentDescription = "Arrow Drop down"
