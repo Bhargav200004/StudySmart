@@ -39,11 +39,19 @@ import com.example.studysmart.subject
 import com.example.studysmart.ui.components.DeleteDialog
 import com.example.studysmart.ui.components.SubjectListBottomSheet
 import com.example.studysmart.ui.components.studySessionList
+import com.ramcosta.composedestinations.annotation.Destination
 import kotlinx.coroutines.launch
+
+@Destination
+@Composable
+fun SessionScreenRoute() {
+    SessionScreen()
+}
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SessionScreen() {
+private fun SessionScreen() {
 
     val scope = rememberCoroutineScope()
     val sheetState = rememberModalBottomSheetState()

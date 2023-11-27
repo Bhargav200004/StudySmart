@@ -87,7 +87,10 @@ private fun StudySessionCard(
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Column {
+            Column(
+                modifier = Modifier
+                    .padding(8.dp)
+            ) {
                 Text(
                     text = session.relatedToSubject,
                     maxLines = 1,

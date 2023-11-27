@@ -51,12 +51,25 @@ import com.example.studysmart.ui.theme.Green
 import com.example.studysmart.ui.theme.Red
 import com.example.studysmart.util.Priority
 import com.example.studysmart.util.changeMillsToDateString
+import com.ramcosta.composedestinations.annotation.Destination
 import kotlinx.coroutines.launch
 import java.time.Instant
 
+
+data class TaskScreenNavArgs(
+    val taskId : Int?,
+    val subjectId : Int?
+)
+
+@Destination(navArgsDelegate = TaskScreenNavArgs::class)
+@Composable
+fun TaskScreenRoute() {
+    TaskScreen()
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TaskScreen() {
+private fun TaskScreen() {
 
     val scope = rememberCoroutineScope()
 

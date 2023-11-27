@@ -30,7 +30,7 @@ fun SubjectCard(
         modifier = modifier
             .size(150.dp)
             .clickable {
-                onClick
+                onClick()
             }
             .background(
                 brush = Brush.verticalGradient(gradientColor),

@@ -50,10 +50,22 @@ import com.example.studysmart.ui.components.DeleteDialog
 import com.example.studysmart.ui.components.TaskDatePickerDialog
 import com.example.studysmart.ui.components.studySessionList
 import com.example.studysmart.ui.components.taskList
+import com.ramcosta.composedestinations.annotation.Destination
+
+data class SubjectScreenNavArgs(
+    val subjectId : Int
+)
+
+
+@Destination(navArgsDelegate = SubjectScreenNavArgs::class )
+@Composable
+fun SubjectScreenRoute() {
+    SubjectScreen()
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SubjectScreen() {
+private fun SubjectScreen() {
 
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     val listState = rememberLazyListState()
