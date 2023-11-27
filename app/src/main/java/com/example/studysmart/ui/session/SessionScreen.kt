@@ -40,18 +40,25 @@ import com.example.studysmart.ui.components.DeleteDialog
 import com.example.studysmart.ui.components.SubjectListBottomSheet
 import com.example.studysmart.ui.components.studySessionList
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.launch
 
 @Destination
 @Composable
-fun SessionScreenRoute() {
-    SessionScreen()
+fun SessionScreenRoute(navigator: DestinationsNavigator) {
+    SessionScreen(
+        onBackButtonClick = {
+            navigator.navigateUp()
+        }
+    )
 }
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun SessionScreen() {
+private fun SessionScreen(
+    onBackButtonClick : () -> Unit
+) {
 
     val scope = rememberCoroutineScope()
     val sheetState = rememberModalBottomSheetState()
@@ -85,7 +92,7 @@ private fun SessionScreen() {
     Scaffold(
         topBar = {
             SessionScreenTopBar(
-                onClickBack = {}
+                onClickBack = onBackButtonClick
             )
         }
     ) { paddingValues ->
