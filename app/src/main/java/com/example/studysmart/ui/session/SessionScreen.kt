@@ -34,7 +34,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.studysmart.studySessionList
+import com.example.studysmart.sessionLists
 import com.example.studysmart.subject
 import com.example.studysmart.ui.components.DeleteDialog
 import com.example.studysmart.ui.components.SubjectListBottomSheet
@@ -134,7 +134,7 @@ private fun SessionScreen(
                 sectionHeading = "STUDY SESSION HISTORY",
                 emptyText = "You don't have resent study Session\n" +
                         "Start a study session to begin the recording",
-                sessions = studySessionList,
+                sessions = sessionLists,
                 onDeleteClick = { isDeleteDialog = true }
             )
         }

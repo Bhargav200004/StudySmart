@@ -26,13 +26,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.studysmart.R
-import com.example.studysmart.domain.model.StudySession
+import com.example.studysmart.domain.model.Session
 
 fun LazyListScope.studySessionList(
     sectionHeading: String,
     emptyText: String,
-    sessions: List<StudySession>,
-    onDeleteClick: (StudySession) -> Unit
+    sessions: List<Session>,
+    onDeleteClick: (Session) -> Unit
 
 ) {
     item {
@@ -78,7 +78,7 @@ fun LazyListScope.studySessionList(
 @Composable
 private fun StudySessionCard(
     modifier: Modifier = Modifier,
-    session: StudySession,
+    session: Session,
     onDeleteClick: () -> Unit
 ) {
     Card(modifier = modifier) {

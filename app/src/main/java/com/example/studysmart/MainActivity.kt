@@ -3,7 +3,7 @@ package com.example.studysmart
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import com.example.studysmart.domain.model.StudySession
+import com.example.studysmart.domain.model.Session
 import com.example.studysmart.domain.model.Subject
 import com.example.studysmart.domain.model.Task
 import com.example.studysmart.ui.NavGraphs
@@ -118,36 +118,36 @@ val task = listOf(
     ),
 )
 
-val studySessionList = listOf(
-    StudySession(
+val sessionLists = listOf(
+    Session(
         sessionSubjectId = 1,
         relatedToSubject = "English",
         date = 0L,
         duration = 0L,
         sessionId = 0,
     ),
-    StudySession(
+    Session(
         sessionSubjectId = 1,
         relatedToSubject = "English",
         date = 0L,
         duration = 0L,
         sessionId = 0,
     ),
-    StudySession(
+    Session(
         sessionSubjectId = 1,
         relatedToSubject = "English",
         date = 0L,
         duration = 0L,
         sessionId = 0,
     ),
-    StudySession(
+    Session(
         sessionSubjectId = 1,
         relatedToSubject = "English",
         date = 0L,
         duration = 0L,
         sessionId = 0,
     ),
-    StudySession(
+    Session(
         sessionSubjectId = 1,
         relatedToSubject = "English",
         date = 0L,

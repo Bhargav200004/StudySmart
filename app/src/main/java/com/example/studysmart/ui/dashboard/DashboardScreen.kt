@@ -37,7 +37,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.studysmart.R
 import com.example.studysmart.domain.model.Subject
-import com.example.studysmart.studySessionList
+import com.example.studysmart.sessionLists
 import com.example.studysmart.subject
 import com.example.studysmart.task
 import com.example.studysmart.ui.components.AddSubjectDialog
@@ -166,7 +166,7 @@ private fun DashboardScreen(
                 sectionHeading = "Resent Study session",
                 emptyText = "You don't have resent study Session\n" +
                         "Start a study session to begin the recording",
-                sessions = studySessionList
+                sessions = sessionLists
             ) { isDeleteButton = true }
 
         }

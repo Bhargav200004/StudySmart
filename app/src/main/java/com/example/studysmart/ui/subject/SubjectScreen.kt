@@ -28,7 +28,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
-import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -43,16 +42,12 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.studysmart.domain.model.Subject
 import com.example.studysmart.task
-import com.example.studysmart.studySessionList
+import com.example.studysmart.sessionLists
 import com.example.studysmart.ui.components.AddSubjectDialog
 import com.example.studysmart.ui.components.CountCard
 import com.example.studysmart.ui.components.DeleteDialog
-import com.example.studysmart.ui.components.TaskDatePickerDialog
 import com.example.studysmart.ui.components.studySessionList
 import com.example.studysmart.ui.components.taskList
-import com.example.studysmart.ui.dashboard.DashBoardScreenRoute
-import com.example.studysmart.ui.destinations.DashBoardScreenRouteDestination
-import com.example.studysmart.ui.destinations.SessionScreenRouteDestination
 import com.example.studysmart.ui.destinations.TaskScreenRouteDestination
 import com.example.studysmart.ui.task.TaskScreenNavArgs
 import com.ramcosta.composedestinations.annotation.Destination
@@ -202,7 +197,7 @@ private fun SubjectScreen(
                 sectionHeading = "Resent Study session",
                 emptyText = "You don't have resent study Session\n" +
                         "Start a study session to begin the recording",
-                sessions = studySessionList,
+                sessions = sessionLists,
                 onDeleteClick = {isDeleteButton = true}
             )
 
