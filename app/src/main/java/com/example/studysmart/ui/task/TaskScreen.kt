@@ -42,6 +42,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.studysmart.subject
 import com.example.studysmart.ui.components.DeleteDialog
 import com.example.studysmart.ui.components.SubjectListBottomSheet
@@ -65,6 +66,9 @@ data class TaskScreenNavArgs(
 @Destination(navArgsDelegate = TaskScreenNavArgs::class)
 @Composable
 fun TaskScreenRoute(navigator : DestinationsNavigator) {
+
+    val viewModel : TaskViewModel = hiltViewModel()
+
     TaskScreen (
         onBackButtonClick = {
             navigator.navigateUp()
