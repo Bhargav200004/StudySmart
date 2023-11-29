@@ -1,5 +1,6 @@
 package com.example.studysmart.util
 
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.ui.graphics.Color
 import com.example.studysmart.ui.theme.Green
 import com.example.studysmart.ui.theme.Orange
@@ -39,3 +40,15 @@ fun Long.toHours() : Float{
     val hour = this.toFloat() / 3600f
     return "%.2f".format(hour).toFloat()
 }
+
+
+//For SnackBar
+sealed class SnackBarEvent(){
+
+    data class ShowSnackBar(
+        val message : String ,
+        val duration : SnackbarDuration = SnackbarDuration.Short
+    ) : SnackBarEvent()
+
+}
+

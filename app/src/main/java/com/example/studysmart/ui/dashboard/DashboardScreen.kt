@@ -24,10 +24,14 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -38,9 +42,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.studysmart.R
+import com.example.studysmart.domain.model.Session
 import com.example.studysmart.domain.model.Subject
-import com.example.studysmart.sessionLists
-import com.example.studysmart.task
+import com.example.studysmart.domain.model.Task
 import com.example.studysmart.ui.components.AddSubjectDialog
 import com.example.studysmart.ui.components.CountCard
 import com.example.studysmart.ui.components.DeleteDialog
@@ -52,8 +56,11 @@ import com.example.studysmart.ui.destinations.SubjectScreenRouteDestination
 import com.example.studysmart.ui.destinations.TaskScreenRouteDestination
 import com.example.studysmart.ui.subject.SubjectScreenNavArgs
 import com.example.studysmart.ui.task.TaskScreenNavArgs
+import com.example.studysmart.util.SnackBarEvent
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.collectLatest
 
 
 @Destination(start = true)
@@ -64,9 +71,14 @@ fun DashBoardScreenRoute(
 
     val viewModel : DashBoardViewModel = hiltViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val tasks by viewModel.tasks.collectAsStateWithLifecycle()
+    val recentSession by viewModel.recentSession.collectAsStateWithLifecycle()
 
     DashboardScreen(
         state = state,
+        tasks = tasks,
+        recentSession = recentSession,
+        snackBarEvent = viewModel.snackBarEventFlow,
         onEvent = viewModel::onEvent,
         onSubjectCardClick ={subjectId->
             subjectId?.let {
@@ -87,6 +99,9 @@ fun DashBoardScreenRoute(
 @Composable
 private fun DashboardScreen(
     state : DashBoardState,
+    tasks : List<Task>,
+    recentSession : List<Session>,
+    snackBarEvent : SharedFlow<SnackBarEvent>,
     onEvent : (DashBoardEvents) -> Unit,
     onSubjectCardClick : (Int?) -> Unit,
     onTaskCardClick : (Int?) -> Unit,
@@ -95,6 +110,21 @@ private fun DashboardScreen(
 
     var isAddSubjectButton by rememberSaveable { mutableStateOf(false) }
     var isDeleteButton by rememberSaveable { mutableStateOf(false) }
+
+    val snackBarHostState = remember { SnackbarHostState () }
+
+    LaunchedEffect(key1 = true){
+        snackBarEvent.collectLatest {event->
+            when(event){
+                is SnackBarEvent.ShowSnackBar ->{
+                    snackBarHostState.showSnackbar(
+                        message = event.message,
+                        duration =event.duration
+                    )
+                }
+            }
+        }
+    }
 
     AddSubjectDialog(
         isOpen = isAddSubjectButton,
@@ -125,6 +155,7 @@ private fun DashboardScreen(
     )
 
     Scaffold(
+        snackbarHost = { SnackbarHost(hostState = snackBarHostState) },
         topBar = { DashboardScreenTopBar() }
     ) { paddingValues ->
 
@@ -166,7 +197,7 @@ private fun DashboardScreen(
                 sectionHeading = "Upcoming Task",
                 emptyText = "You don't have upcoming task\n" +
                         "Click + in Subject task to add new task",
-                tasks = task,
+                tasks = tasks,
                 onCheckBoxClick = { onEvent(DashBoardEvents.OnTaskIsCompleteChange(it))},
                 onTaskCardClick = onTaskCardClick
             )
@@ -177,7 +208,7 @@ private fun DashboardScreen(
                 sectionHeading = "Resent Study session",
                 emptyText = "You don't have resent study Session\n" +
                         "Start a study session to begin the recording",
-                sessions = sessionLists,
+                sessions = recentSession,
                 onDeleteClick = {
                     onEvent(DashBoardEvents.OnDeleteSessionButtonClick(it))
                     isDeleteButton = true
