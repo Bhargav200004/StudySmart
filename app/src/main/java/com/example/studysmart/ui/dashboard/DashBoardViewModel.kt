@@ -3,6 +3,7 @@ package com.example.studysmart.ui.dashboard
 import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.studysmart.domain.model.Session
 import com.example.studysmart.domain.model.Subject
 import com.example.studysmart.domain.model.Task
 import com.example.studysmart.domain.repository.SessionRepository
@@ -46,7 +47,19 @@ class DashBoardViewModel @Inject constructor(
         initialValue = DashBoardState()
     )
 
-//    val task : StateFlow<List<Task>> =
+    val tasks : StateFlow<List<Task>> = taskRepository.getAllUpcomingTask()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = emptyList()
+        )
+
+    val recentSession : StateFlow<List<Session>> = sessionRepository.getRecentFiveSession()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = emptyList()
+        )
 
 
     fun onEvent(event : DashBoardEvents){
