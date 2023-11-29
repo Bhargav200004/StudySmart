@@ -7,7 +7,7 @@ interface SubjectRepository {
 
     suspend fun upsertSubject(subject: Subject)
 
-     fun getTotalSubjectCount():Flow<List<Subject>>
+     fun getTotalSubjectCount():Flow<Int>
 
      fun getTotalGoalHour () : Flow<Float>
 

@@ -3,6 +3,7 @@ package com.example.studysmart
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.ui.graphics.toArgb
 import com.example.studysmart.domain.model.Session
 import com.example.studysmart.domain.model.Subject
 import com.example.studysmart.domain.model.Task
@@ -28,32 +29,32 @@ class MainActivity : ComponentActivity() {
 val subject = listOf(
     Subject(
         name = "Maths",
-        goalHours = "20",
-        colors = Subject.subjectCardColor[0],
+        goalHours = 20f,
+        colors = Subject.subjectCardColor[0].map { it.toArgb() },
         subjectId = 0
     ),
     Subject(
         name = "Physics",
-        goalHours = "5",
-        colors = Subject.subjectCardColor[1],
+        goalHours = 5f,
+        colors = Subject.subjectCardColor[1].map { it.toArgb() },
         subjectId = 0
     ),
     Subject(
         name = "Chemistry",
-        goalHours = "20",
-        colors = Subject.subjectCardColor[2],
+        goalHours = 20f,
+        colors = Subject.subjectCardColor[2].map { it.toArgb() },
         subjectId = 0
     ),
     Subject(
         name = "Bio",
-        goalHours = "60",
-        colors = Subject.subjectCardColor[3],
+        goalHours = 60f,
+        colors = Subject.subjectCardColor[3].map { it.toArgb() },
         subjectId = 0
     ),
     Subject(
         name = "DSA",
-        goalHours = "100",
-        colors = Subject.subjectCardColor[4],
+        goalHours = 100f,
+        colors = Subject.subjectCardColor[4].map { it.toArgb() },
         subjectId = 0
     )
 )

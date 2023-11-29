@@ -36,10 +36,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.studysmart.R
 import com.example.studysmart.domain.model.Subject
 import com.example.studysmart.sessionLists
-import com.example.studysmart.subject
 import com.example.studysmart.task
 import com.example.studysmart.ui.components.AddSubjectDialog
 import com.example.studysmart.ui.components.CountCard
@@ -63,8 +63,11 @@ fun DashBoardScreenRoute(
 ) {
 
     val viewModel : DashBoardViewModel = hiltViewModel()
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
     DashboardScreen(
+        state = state,
+        onEvent = viewModel::onEvent,
         onSubjectCardClick ={subjectId->
             subjectId?.let {
                 val navArg = SubjectScreenNavArgs(subjectId = subjectId)
@@ -83,6 +86,8 @@ fun DashBoardScreenRoute(
 
 @Composable
 private fun DashboardScreen(
+    state : DashBoardState,
+    onEvent : (DashBoardEvents) -> Unit,
     onSubjectCardClick : (Int?) -> Unit,
     onTaskCardClick : (Int?) -> Unit,
     onStartSessionButtonClick : () -> Unit
@@ -91,20 +96,19 @@ private fun DashboardScreen(
     var isAddSubjectButton by rememberSaveable { mutableStateOf(false) }
     var isDeleteButton by rememberSaveable { mutableStateOf(false) }
 
-    var subjectName by rememberSaveable { mutableStateOf("") }
-    var goalHour by rememberSaveable { mutableStateOf("") }
-    var selectedColor by rememberSaveable { mutableStateOf(Subject.subjectCardColor.random()) }
-
     AddSubjectDialog(
         isOpen = isAddSubjectButton,
-        subjectName = subjectName,
-        goalHour = goalHour,
-        selectedColor = selectedColor,
-        onSubjectChange = { subjectName = it },
-        onGoalHourChange = { goalHour = it },
-        onColorChange = { selectedColor = it },
+        subjectName = state.subjectName,
+        goalHour = state.goalStudyHour,
+        selectedColor = state.subjectCardColors,
+        onSubjectChange = { onEvent(DashBoardEvents.OnSubjectNameChange(it)) },
+        onGoalHourChange = { onEvent(DashBoardEvents.OnGoalStudyHoursChange(it)) },
+        onColorChange = { onEvent(DashBoardEvents.OnSubjectCardColorChange(it)) },
         onDismissRequest = { isAddSubjectButton = false },
-        onSaveRequest = { isAddSubjectButton = false }
+        onSaveRequest = {
+            onEvent(DashBoardEvents.SaveSubject)
+            isAddSubjectButton = false
+        }
     )
 
 
@@ -114,7 +118,10 @@ private fun DashboardScreen(
         bodyText = "Are you sure, you want to delete session? Your study hour will reduce " +
                 "by this session time . this action cannot be undo",
         onDismissRequest = { isDeleteButton = false },
-        onSaveRequest = { isDeleteButton = false }
+        onSaveRequest = {
+            onEvent(DashBoardEvents.DeleteSession)
+            isDeleteButton = false
+        }
     )
 
     Scaffold(
@@ -131,15 +138,15 @@ private fun DashboardScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(12.dp),
-                    subjectCount = 5,
-                    studiedHourCount = "20",
-                    goalStudyHourCount = "40"
+                    subjectCount = state.totalSubjectCount,
+                    studiedHourCount = state.totalStudiedHour.toString(),
+                    goalStudyHourCount = state.totalGoalStudyHour.toString()
                 )
             }
             item {
                 SubjectCardSection(
                     modifier = Modifier.fillMaxWidth(),
-                    subjectList = subject,
+                    subjectList = state.subjects,
                     isIconButtonClick = { isAddSubjectButton = true },
                     onSubjectCardClick = onSubjectCardClick
                 )
@@ -160,7 +167,7 @@ private fun DashboardScreen(
                 emptyText = "You don't have upcoming task\n" +
                         "Click + in Subject task to add new task",
                 tasks = task,
-                onCheckBoxClick = {},
+                onCheckBoxClick = { onEvent(DashBoardEvents.OnTaskIsCompleteChange(it))},
                 onTaskCardClick = onTaskCardClick
             )
             item {
@@ -170,8 +177,12 @@ private fun DashboardScreen(
                 sectionHeading = "Resent Study session",
                 emptyText = "You don't have resent study Session\n" +
                         "Start a study session to begin the recording",
-                sessions = sessionLists
-            ) { isDeleteButton = true }
+                sessions = sessionLists,
+                onDeleteClick = {
+                    onEvent(DashBoardEvents.OnDeleteSessionButtonClick(it))
+                    isDeleteButton = true
+                }
+            )
 
         }
 
@@ -275,7 +286,7 @@ private fun SubjectCardSection(
             items(subjectList) { subject ->
                 SubjectCard(
                     subjectName = subject.name,
-                    gradientColor = subject.colors,
+                    gradientColor = subject.colors.map { Color(it) },
                     onClick = {onSubjectCardClick(subject.subjectId)}
                 )
             }

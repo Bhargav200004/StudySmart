@@ -33,3 +33,9 @@ val date : LocalDate = this?.let {
 
     return date.format(DateTimeFormatter.ofPattern("dd MMM yyyy"))
 }
+
+
+fun Long.toHours() : Float{
+    val hour = this.toFloat() / 3600f
+    return "%.2f".format(hour).toFloat()
+}

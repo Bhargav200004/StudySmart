@@ -27,7 +27,7 @@ class SessionRepositoryImpl @Inject constructor(
     }
 
     override fun getTotalSessionDuration(): Flow<Long> {
-        TODO("Not yet implemented")
+        return sessionDoa.getTotalSessionsDuration()
     }
 
     override fun getTotalSessionDurationBySubjectId(subjectId: Int): Flow<Long> {

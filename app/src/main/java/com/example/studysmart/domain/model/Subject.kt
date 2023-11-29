@@ -12,8 +12,8 @@ import com.example.studysmart.ui.theme.gradient4
 @Entity
 data class Subject(
     val name : String,
-    val goalHours : String,
-    val colors : List<Color>,
+    val goalHours : Float,
+    val colors : List<Int>,
     @PrimaryKey(autoGenerate = true)
     val subjectId : Int? = null
 ){
