@@ -23,11 +23,27 @@ class TaskRepositoryImpl @Inject constructor(
     }
 
     override fun getUpcomingTasksForSubject(subjectInt: Int): Flow<List<Task>> {
-        TODO("Not yet implemented")
+        return taskDoa.getTasksForSubject(subjectInt)
+            .map { tasks->
+                tasks.filter {
+                    it.isCompleted.not()
+                }
+            }
+            .map { tasks->
+                sortTask(tasks)
+            }
     }
 
     override fun getCompletedTaskForSubject(subjectInt: Int): Flow<List<Task>> {
-        TODO("Not yet implemented")
+        return taskDoa.getTasksForSubject(subjectInt)
+            .map { tasks->
+                tasks.filter {
+                    it.isCompleted
+                }
+            }
+            .map { tasks->
+            sortTask(tasks)
+            }
     }
 
     override fun getAllUpcomingTask(): Flow<List<Task>> {

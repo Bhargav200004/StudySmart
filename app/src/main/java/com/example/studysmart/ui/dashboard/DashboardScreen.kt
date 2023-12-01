@@ -318,12 +318,9 @@ private fun SubjectCardSection(
                 SubjectCard(
                     subjectName = subject.name,
                     gradientColor = subject.colors.map { Color(it) },
-                    onClick = {onSubjectCardClick(subject.subjectId)}
+                    onClick = { onSubjectCardClick(subject.subjectId) }
                 )
             }
         }
-
     }
 }
-
-
