@@ -149,6 +149,7 @@ private fun SubjectScreen(
         onSaveRequest = {
             onEvent(SubjectEvent.DeleteSession)
             isDeleteButton = false
+
         }
     )
 
@@ -161,9 +162,16 @@ private fun SubjectScreen(
                         duration = event.duration
                     )
                 }
+                SnackBarEvent.NavigateUp -> {
+                    onBackButtonClick()
+                }
             }
 
         }
+    }
+
+    LaunchedEffect(key1 = state.studiedHours , key2 = state.goalStudyHour){
+        onEvent(SubjectEvent.UpdateProgress)
     }
 
     Scaffold(
