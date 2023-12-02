@@ -95,7 +95,32 @@ class DashBoardViewModel @Inject constructor(
             DashBoardEvents.DeleteSession -> {
 
             }
-            is DashBoardEvents.OnTaskIsCompleteChange -> TODO()
+            is DashBoardEvents.OnTaskIsCompleteChange -> {
+                updateTask(event.task)
+            }
+        }
+    }
+
+    private fun updateTask(task: Task) {
+        viewModelScope.launch {
+            try {
+                taskRepository.upsertTask(task=task.copy(
+                    isCompleted = !task.isCompleted
+                ))
+                _snackBarEventFlow.emit(
+                    SnackBarEvent.ShowSnackBar(
+                        message = "Saved in Upcoming task"
+                    )
+                )
+            }
+            catch (e : Exception){
+                _snackBarEventFlow.emit(
+                    SnackBarEvent.ShowSnackBar(
+                        message = "Couldn't updated ${e.message}",
+                        duration = SnackbarDuration.Long
+                    )
+                )
+            }
         }
     }
 

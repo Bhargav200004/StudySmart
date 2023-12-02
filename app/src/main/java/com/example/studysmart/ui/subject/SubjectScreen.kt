@@ -80,7 +80,7 @@ fun SubjectScreenRoute(
             navigator.navigateUp()
         },
         onAddTaskButtonClick = {
-            val navArgs = TaskScreenNavArgs(taskId = null, subjectId = -1)
+            val navArgs = TaskScreenNavArgs(taskId = null, subjectId = state.currentSubjectId)
             navigator.navigate(TaskScreenRouteDestination(navArgs)) },
         onTaskCardClick = {taskId ->
             val navArgs = TaskScreenNavArgs(taskId = taskId, subjectId = null)
@@ -326,7 +326,7 @@ private fun SubjectOverViewSection(
         CountCard(
             modifier = Modifier
                 .weight(1f),
-            headline = "Study Hour",
+            headline = "Studied Hour",
             count = studyHour
         )
         Spacer(modifier = Modifier.width(10.dp))

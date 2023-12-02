@@ -7,6 +7,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.studysmart.domain.model.Subject
+import com.example.studysmart.domain.model.Task
 import com.example.studysmart.domain.repository.SessionRepository
 import com.example.studysmart.domain.repository.SubjectRepository
 import com.example.studysmart.domain.repository.TaskRepository
@@ -98,9 +99,40 @@ class SubjectScreenViewModel @Inject constructor(
                 }
             }
             SubjectEvent.DeleteSubject -> deleteSubject()
-            SubjectEvent.DeleteSession -> TODO()
-            is SubjectEvent.OnDeleteSessionButtonClick -> TODO()
-            is SubjectEvent.OnTaskCompleteChange -> TODO()
+            is SubjectEvent.OnDeleteSessionButtonClick -> {
+            }
+            SubjectEvent.DeleteSession -> {}
+            is SubjectEvent.OnTaskCompleteChange -> {
+                updateTask(event.task)
+            }
+        }
+    }
+
+    private fun updateTask(task: Task) {
+        viewModelScope.launch {
+            try {
+                taskRepository.upsertTask(task = task.copy(
+                    isCompleted = !task.isCompleted
+                ))
+                if (task.isCompleted) {
+                    _snackBarEventFlow.emit(
+                        SnackBarEvent.ShowSnackBar(message = "Saved in Upcoming task")
+                    )
+                }
+                else{
+                    _snackBarEventFlow.emit(
+                        SnackBarEvent.ShowSnackBar(message = "Saved in completed task")
+                    )
+                }
+            }
+            catch (e : Exception){
+                _snackBarEventFlow.emit(
+                    SnackBarEvent.ShowSnackBar(
+                        message = "couldn't update ${e.message}",
+                        duration = SnackbarDuration.Long
+                    )
+                )
+            }
         }
     }
 

@@ -80,7 +80,7 @@ dependencies {
 
 
     //Room library for storage
-    val roomVersion = "2.6.0"
+    val roomVersion = "2.6.1"
     implementation("androidx.room:room-runtime:$roomVersion")
     ksp("androidx.room:room-compiler:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")

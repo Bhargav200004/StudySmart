@@ -15,34 +15,34 @@ class TaskRepositoryImpl @Inject constructor(
     }
 
     override suspend fun deleteTask(taskId: Int) {
-        TODO("Not yet implemented")
+        taskDoa.deleteTask(taskId)
     }
 
     override suspend fun getTaskById(taskId: Int): Task? {
-        TODO("Not yet implemented")
+        return taskDoa.getTaskById(taskId)
     }
 
     override fun getUpcomingTasksForSubject(subjectInt: Int): Flow<List<Task>> {
         return taskDoa.getTasksForSubject(subjectInt)
-            .map { tasks->
+            .map { tasks ->
                 tasks.filter {
                     it.isCompleted.not()
                 }
             }
-            .map { tasks->
+            .map { tasks ->
                 sortTask(tasks)
             }
     }
 
     override fun getCompletedTaskForSubject(subjectInt: Int): Flow<List<Task>> {
         return taskDoa.getTasksForSubject(subjectInt)
-            .map { tasks->
+            .map { tasks ->
                 tasks.filter {
                     it.isCompleted
                 }
             }
-            .map { tasks->
-            sortTask(tasks)
+            .map { tasks ->
+                sortTask(tasks)
             }
     }
 
@@ -53,13 +53,13 @@ class TaskRepositoryImpl @Inject constructor(
                     it.isCompleted.not()
                 }
             }
-            .map {tasks->
+            .map { tasks ->
                 sortTask(tasks)
             }
     }
 
-    private fun sortTask(tasks : List<Task>) : List<Task>{
-        return tasks.sortedWith(compareBy<Task> {it.dueDate}.thenByDescending { it.priority })
+    private fun sortTask(tasks: List<Task>): List<Task> {
+        return tasks.sortedWith(compareBy<Task> { it.dueDate }.thenByDescending { it.priority })
     }
 
 }
