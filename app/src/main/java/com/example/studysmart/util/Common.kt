@@ -54,3 +54,11 @@ sealed class SnackBarEvent(){
 
 }
 
+
+fun Long.pad() : String{
+    return this.toString().padStart(length = 2 , '0')
+}
+fun Int.pad() : String{
+    return this.toString().padStart(length = 2 , '0')
+}
+

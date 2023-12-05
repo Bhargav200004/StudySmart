@@ -258,7 +258,7 @@ private fun CountCardsSection(
             headline = "Studied Hours",
             count = studiedHourCount
         )
-        Spacer(modifier = Modifier.width(10.dp))
+        Spacer(modifier = Modifier.width(9.dp))
         CountCard(
             modifier = Modifier
                 .weight(1f),

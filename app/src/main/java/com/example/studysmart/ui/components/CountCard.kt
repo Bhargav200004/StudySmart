@@ -34,7 +34,6 @@ fun CountCard(
                 style = MaterialTheme.typography.labelSmall
             )
             Spacer(modifier = Modifier.height(5.dp))
-
             Text(
                 text = count,
                 style = MaterialTheme.typography.bodySmall.copy(fontSize = 30.sp)
