@@ -2,6 +2,14 @@ package com.example.studysmart.ui.session
 
 import android.content.Intent
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ContentTransform
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -251,7 +259,8 @@ private fun TimerSection(
         Row {
             AnimatedContent(
                 targetState = hours,
-                label = hours
+                label = hours,
+                transitionSpec = { timerTextAnimation()}
             ) { hours ->
                 Text(
                     text = "$hours:",
@@ -260,7 +269,8 @@ private fun TimerSection(
             }
             AnimatedContent(
                 targetState = minutes,
-                label = minutes
+                label = minutes,
+                transitionSpec = { timerTextAnimation()}
             ) { minutes ->
                 Text(
                     text = "$minutes:",
@@ -269,7 +279,8 @@ private fun TimerSection(
             }
             AnimatedContent(
                 targetState = seconds,
-                label = seconds
+                label = seconds,
+                transitionSpec = { timerTextAnimation()}
             ) { seconds ->
                 Text(
                     text = seconds,
@@ -364,4 +375,11 @@ private fun ButtonSection(
                 )
             }
     }
+}
+
+private fun timerTextAnimation(duration : Int = 600) : ContentTransform{
+    return slideInVertically(animationSpec = tween(duration)) { fullHeight -> fullHeight   }+
+            fadeIn(animationSpec = tween(duration)) togetherWith
+            slideOutVertically(animationSpec = tween(duration)) { fullHeight -> -fullHeight } +
+            fadeOut(animationSpec = tween(duration))
 }
