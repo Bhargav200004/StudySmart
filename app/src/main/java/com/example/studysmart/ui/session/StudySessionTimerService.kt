@@ -5,8 +5,8 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
 import android.content.Intent
+import android.os.Binder
 import android.os.Build
-import android.os.IBinder
 import androidx.compose.runtime.mutableStateOf
 import androidx.core.app.NotificationCompat
 import com.example.studysmart.util.Constants.ACTION_SERVICE_CANCEL
@@ -34,6 +34,8 @@ class StudySessionTimerService : Service(){
 
     private lateinit var timer : Timer
 
+    private val binder = StudySessionTimeBinder()
+
     var duration: Duration = Duration.ZERO
         private set
     var seconds = mutableStateOf("00")
@@ -46,7 +48,6 @@ class StudySessionTimerService : Service(){
         private set
 
 
-    override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         intent?.action.let {
@@ -57,16 +58,20 @@ class StudySessionTimerService : Service(){
                         updateContent(hour = hours , minute = minutes , seconds = seconds)
                     }
                 }
-                ACTION_SERVICE_STOP ->{
-
+                ACTION_SERVICE_STOP -> {
+                    stopTimer()
                 }
                 ACTION_SERVICE_CANCEL ->{
-
+                    stopTimer()
+                    cancelTimer()
+                    stopForeGroundService()
                 }
             }
         }
         return super.onStartCommand(intent, flags, startId)
     }
+
+    override fun onBind(intent: Intent?) = binder
 
 
     @SuppressLint("ForegroundServiceType")
@@ -89,6 +94,12 @@ class StudySessionTimerService : Service(){
             )
             notificationManager.createNotificationChannel(channel)
         }
+    }
+
+    private fun stopForeGroundService(){
+        notificationManager.cancel(NOTIFICATION_ID)
+        stopForeground(STOP_FOREGROUND_REMOVE)
+        stopSelf()
     }
 
 
@@ -114,12 +125,30 @@ class StudySessionTimerService : Service(){
         }
     }
 
+    private fun stopTimer(){
+        if (this::timer.isInitialized){
+            timer.cancel()
+        }
+        currentTimerState.value = TimerState.STOPPED
+    }
+
+    private fun cancelTimer(){
+        duration = Duration.ZERO
+        updateTimeUnits()
+        currentTimerState.value = TimerState.IDLE
+    }
+
     private fun updateTimeUnits(){
         duration.toComponents{ hours, minutes, seconds, _ ->
             this@StudySessionTimerService.hours.value = hours.pad()
             this@StudySessionTimerService.minutes.value = minutes.pad()
             this@StudySessionTimerService.seconds.value = seconds.pad()
         }
+    }
+
+
+    inner class StudySessionTimeBinder : Binder(){
+        fun getServices() : StudySessionTimerService = this@StudySessionTimerService
     }
 
 }

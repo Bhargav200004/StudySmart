@@ -4,6 +4,7 @@ import android.app.NotificationManager
 import android.content.Context
 import androidx.core.app.NotificationCompat
 import com.example.studysmart.R
+import com.example.studysmart.ui.session.ServiceHelper
 import com.example.studysmart.util.Constants.NOTIFICATION_CHANNEL_ID
 import dagger.Module
 import dagger.Provides
@@ -25,9 +26,10 @@ object NotificationModule {
         return NotificationCompat
             .Builder(context , NOTIFICATION_CHANNEL_ID)
             .setContentTitle("Study Session")
-            .setContentTitle("00:00:00")
+            .setContentText("00:00:00")
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setOngoing(true)
+            .setContentIntent(ServiceHelper.clickPendingIntent(context))
     }
 
     @ServiceScoped
