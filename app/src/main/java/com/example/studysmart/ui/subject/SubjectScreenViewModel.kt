@@ -100,10 +100,38 @@ class SubjectScreenViewModel @Inject constructor(
             }
             SubjectEvent.DeleteSubject -> deleteSubject()
             is SubjectEvent.OnDeleteSessionButtonClick -> {
+                _state.update { subjectState ->
+                    subjectState.copy(
+                        session = event.session
+                    )
+                }
             }
-            SubjectEvent.DeleteSession -> {}
+            SubjectEvent.DeleteSession -> deleteSession()
             is SubjectEvent.OnTaskCompleteChange -> {
                 updateTask(event.task)
+            }
+        }
+    }
+
+    private fun deleteSession() {
+        viewModelScope.launch {
+            try {
+                state.value.session?.let { session ->
+                    sessionRepository.deleteSession(session = session)
+                    _snackBarEventFlow.emit(
+                        SnackBarEvent.ShowSnackBar(
+                            message = "Successfully delete Session"
+                        )
+                    )
+                }
+            }
+            catch (e : Exception){
+                _snackBarEventFlow.emit(
+                    SnackBarEvent.ShowSnackBar(
+                        message = "Couldn't delete session ${e.message}",
+                        duration = SnackbarDuration.Long
+                    )
+                )
             }
         }
     }
