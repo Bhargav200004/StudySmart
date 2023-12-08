@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.take
 import javax.inject.Inject
 
 class SessionRepositoryImpl @Inject constructor(
-    private val sessionDoa  : SessionDao
+    private val sessionDoa: SessionDao
 ) : SessionRepository {
     override suspend fun insertSession(session: Session) {
         sessionDoa.insertSession(session)
@@ -21,9 +21,9 @@ class SessionRepositoryImpl @Inject constructor(
     }
 
     override fun getAllSession(): Flow<List<Session>> {
-       return sessionDoa.getAllSessions().map {session ->
-           session.sortedByDescending {it.date  }
-       }
+        return sessionDoa.getAllSessions().map { session ->
+            session.sortedByDescending { it.date }
+        }
     }
 
     override fun getRecentFiveSession(): Flow<List<Session>> {
@@ -35,8 +35,8 @@ class SessionRepositoryImpl @Inject constructor(
 
     override fun getRecentTenSessionForSubject(subjectId: Int): Flow<List<Session>> {
         return sessionDoa.getRecentSessionsForSubject(subjectId)
-            .map {session ->
-                session.sortedByDescending {it.date  }
+            .map { session ->
+                session.sortedByDescending { it.date }
             }
             .take(count = 10)
     }

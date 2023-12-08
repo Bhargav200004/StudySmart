@@ -17,17 +17,17 @@ interface SessionDao {
     suspend fun deleteSession(session: Session)
 
     @Query("SELECT * FROM SESSION")
-    fun getAllSessions() : Flow<List<Session>>
+    fun getAllSessions(): Flow<List<Session>>
 
     @Query("SELECT * FROM SESSION WHERE sessionSubjectId = :subjectId")
-    fun getRecentSessionsForSubject(subjectId : Int) :Flow<List<Session>>
+    fun getRecentSessionsForSubject(subjectId: Int): Flow<List<Session>>
 
 
     @Query("SELECT SUM(duration) FROM SESSION")
-    fun getTotalSessionsDuration () : Flow<Long>
+    fun getTotalSessionsDuration(): Flow<Long>
 
     @Query("SELECT SUM(duration) FROM SESSION WHERE sessionSubjectId = :subjectId")
-    fun getTotalSessionsDurationBySubject(subjectId :Int) : Flow<Long>
+    fun getTotalSessionsDurationBySubject(subjectId: Int): Flow<Long>
 
     @Query("DELETE FROM SESSION WHERE sessionSubjectId = :subjectId")
     fun deleteSessionsBySubjectId(subjectId: Int)

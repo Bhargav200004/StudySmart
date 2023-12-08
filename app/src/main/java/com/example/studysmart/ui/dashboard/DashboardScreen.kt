@@ -67,10 +67,10 @@ import kotlinx.coroutines.flow.collectLatest
 @Destination
 @Composable
 fun DashBoardScreenRoute(
-    navigator : DestinationsNavigator
+    navigator: DestinationsNavigator
 ) {
 
-    val viewModel : DashBoardViewModel = hiltViewModel()
+    val viewModel: DashBoardViewModel = hiltViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
     val tasks by viewModel.tasks.collectAsStateWithLifecycle()
     val recentSession by viewModel.recentSession.collectAsStateWithLifecycle()
@@ -81,17 +81,17 @@ fun DashBoardScreenRoute(
         recentSession = recentSession,
         snackBarEvent = viewModel.snackBarEventFlow,
         onEvent = viewModel::onEvent,
-        onSubjectCardClick ={subjectId->
+        onSubjectCardClick = { subjectId ->
             subjectId?.let {
                 val navArg = SubjectScreenNavArgs(subjectId = subjectId)
                 navigator.navigate(SubjectScreenRouteDestination(navArg))
             }
         },
-        onTaskCardClick ={taskId ->
-            val navArg = TaskScreenNavArgs(taskId = taskId,subjectId = null)
+        onTaskCardClick = { taskId ->
+            val navArg = TaskScreenNavArgs(taskId = taskId, subjectId = null)
             navigator.navigate(TaskScreenRouteDestination(navArg))
         },
-        onStartSessionButtonClick ={
+        onStartSessionButtonClick = {
             navigator.navigate(SessionScreenRouteDestination())
         }
     )
@@ -99,28 +99,28 @@ fun DashBoardScreenRoute(
 
 @Composable
 private fun DashboardScreen(
-    state : DashBoardState,
-    tasks : List<Task>,
-    recentSession : List<Session>,
-    snackBarEvent : SharedFlow<SnackBarEvent>,
-    onEvent : (DashBoardEvents) -> Unit,
-    onSubjectCardClick : (Int?) -> Unit,
-    onTaskCardClick : (Int?) -> Unit,
-    onStartSessionButtonClick : () -> Unit
+    state: DashBoardState,
+    tasks: List<Task>,
+    recentSession: List<Session>,
+    snackBarEvent: SharedFlow<SnackBarEvent>,
+    onEvent: (DashBoardEvents) -> Unit,
+    onSubjectCardClick: (Int?) -> Unit,
+    onTaskCardClick: (Int?) -> Unit,
+    onStartSessionButtonClick: () -> Unit
 ) {
 
     var isAddSubjectButton by rememberSaveable { mutableStateOf(false) }
     var isDeleteButton by rememberSaveable { mutableStateOf(false) }
 
-    val snackBarHostState = remember { SnackbarHostState () }
+    val snackBarHostState = remember { SnackbarHostState() }
 
-    LaunchedEffect(key1 = true){
-        snackBarEvent.collectLatest {event->
-            when(event){
-                is SnackBarEvent.ShowSnackBar ->{
+    LaunchedEffect(key1 = true) {
+        snackBarEvent.collectLatest { event ->
+            when (event) {
+                is SnackBarEvent.ShowSnackBar -> {
                     snackBarHostState.showSnackbar(
                         message = event.message,
-                        duration =event.duration
+                        duration = event.duration
                     )
                 }
 
@@ -187,7 +187,7 @@ private fun DashboardScreen(
             }
             item {
                 Button(
-                    onClick =  onStartSessionButtonClick ,
+                    onClick = onStartSessionButtonClick,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 48.dp, vertical = 20.dp)
@@ -201,7 +201,7 @@ private fun DashboardScreen(
                 emptyText = "You don't have upcoming task\n" +
                         "Click + in Subject task to add new task",
                 tasks = tasks,
-                onCheckBoxClick = { onEvent(DashBoardEvents.OnTaskIsCompleteChange(it))},
+                onCheckBoxClick = { onEvent(DashBoardEvents.OnTaskIsCompleteChange(it)) },
                 onTaskCardClick = onTaskCardClick
             )
             item {
@@ -275,7 +275,7 @@ private fun SubjectCardSection(
     subjectList: List<Subject>,
     emptyText: String = "Your Subject is empty. \n Press + to add the Subject",
     isIconButtonClick: () -> Unit,
-    onSubjectCardClick : (Int?) -> Unit,
+    onSubjectCardClick: (Int?) -> Unit,
 ) {
     Column(modifier = modifier) {
         Row(

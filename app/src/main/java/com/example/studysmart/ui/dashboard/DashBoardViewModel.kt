@@ -31,14 +31,14 @@ class DashBoardViewModel @Inject constructor(
     private val taskRepository: TaskRepository
 ) : ViewModel() {
 
-    private val _state : MutableStateFlow<DashBoardState> = MutableStateFlow(DashBoardState())
+    private val _state: MutableStateFlow<DashBoardState> = MutableStateFlow(DashBoardState())
     val state = combine(
         _state,
         subjectRepository.getTotalSubjectCount(),
         subjectRepository.getTotalGoalHour(),
         subjectRepository.getAllSubject(),
         sessionRepository.getTotalSessionDuration()
-    ){state , subjectCount , goalHour , subjects , totalSessionDuration ->
+    ) { state, subjectCount, goalHour, subjects, totalSessionDuration ->
         state.copy(
             totalSubjectCount = subjectCount,
             totalGoalStudyHour = goalHour,
@@ -51,46 +51,50 @@ class DashBoardViewModel @Inject constructor(
         initialValue = DashBoardState()
     )
 
-    val tasks : StateFlow<List<Task>> = taskRepository.getAllUpcomingTask()
+    val tasks: StateFlow<List<Task>> = taskRepository.getAllUpcomingTask()
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5000),
             initialValue = emptyList()
         )
 
-    val recentSession : StateFlow<List<Session>> = sessionRepository.getRecentFiveSession()
+    val recentSession: StateFlow<List<Session>> = sessionRepository.getRecentFiveSession()
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5000),
             initialValue = emptyList()
         )
 
-    private val _snackBarEventFlow : MutableSharedFlow<SnackBarEvent> = MutableSharedFlow()
+    private val _snackBarEventFlow: MutableSharedFlow<SnackBarEvent> = MutableSharedFlow()
     val snackBarEventFlow = _snackBarEventFlow.asSharedFlow()
 
 
-    fun onEvent(event : DashBoardEvents){
-        when(event){
-            is DashBoardEvents.OnSubjectNameChange ->{
+    fun onEvent(event: DashBoardEvents) {
+        when (event) {
+            is DashBoardEvents.OnSubjectNameChange -> {
                 _state.update {
                     it.copy(subjectName = event.name)
                 }
             }
+
             is DashBoardEvents.OnGoalStudyHoursChange -> {
                 _state.update {
                     it.copy(goalStudyHour = event.hours)
                 }
             }
+
             is DashBoardEvents.OnSubjectCardColorChange -> {
                 _state.update {
                     it.copy(subjectCardColors = event.colors)
                 }
             }
+
             is DashBoardEvents.OnDeleteSessionButtonClick -> {
                 _state.update {
                     it.copy(session = event.session)
                 }
             }
+
             DashBoardEvents.SaveSubject -> saveSubject()
             DashBoardEvents.DeleteSession -> deleteSession()
             is DashBoardEvents.OnTaskIsCompleteChange -> {
@@ -101,7 +105,7 @@ class DashBoardViewModel @Inject constructor(
 
     private fun deleteSession() {
         viewModelScope.launch {
-            state.value.session?.let {session->
+            state.value.session?.let { session ->
                 try {
                     sessionRepository.deleteSession(session = session)
                     _snackBarEventFlow.emit(
@@ -109,8 +113,7 @@ class DashBoardViewModel @Inject constructor(
                             message = "Successfully deleted session"
                         )
                     )
-                }
-                catch (e :Exception){
+                } catch (e: Exception) {
                     _snackBarEventFlow.emit(
                         SnackBarEvent.ShowSnackBar(
                             message = "couldn't delete session ${e.message}",
@@ -125,16 +128,17 @@ class DashBoardViewModel @Inject constructor(
     private fun updateTask(task: Task) {
         viewModelScope.launch {
             try {
-                taskRepository.upsertTask(task=task.copy(
-                    isCompleted = !task.isCompleted
-                ))
+                taskRepository.upsertTask(
+                    task = task.copy(
+                        isCompleted = !task.isCompleted
+                    )
+                )
                 _snackBarEventFlow.emit(
                     SnackBarEvent.ShowSnackBar(
                         message = "Saved in Upcoming task"
                     )
                 )
-            }
-            catch (e : Exception){
+            } catch (e: Exception) {
                 _snackBarEventFlow.emit(
                     SnackBarEvent.ShowSnackBar(
                         message = "Couldn't updated ${e.message}",
@@ -168,8 +172,7 @@ class DashBoardViewModel @Inject constructor(
                         "Subject Saved SuccessFully"
                     )
                 )
-            }
-            catch (e:Exception){
+            } catch (e: Exception) {
                 _snackBarEventFlow.emit(
                     SnackBarEvent.ShowSnackBar(
                         "Couldn't Save the Subject. \n ${e.message}",

@@ -14,18 +14,18 @@ interface TaskDao {
     suspend fun upsertTask(task: Task)
 
     @Query("DELETE FROM TASK WHERE taskId =:taskId")
-    suspend fun deleteTask(taskId : Int)
+    suspend fun deleteTask(taskId: Int)
 
     @Query("DELETE FROM TASK WHERE taskSubjectId =:subjectId")
-    suspend fun deleteTaskBySubjectId(subjectId : Int)
+    suspend fun deleteTaskBySubjectId(subjectId: Int)
 
     @Query("SELECT * FROM TASK WHERE taskId =:taskId")
-    suspend fun getTaskById(taskId : Int): Task?
+    suspend fun getTaskById(taskId: Int): Task?
 
     @Query("SELECT * FROM TASK WHERE taskSubjectId=:subjectId")
-    fun getTasksForSubject(subjectId: Int) : Flow<List<Task>>
+    fun getTasksForSubject(subjectId: Int): Flow<List<Task>>
 
     @Query("SELECT * FROM TASK")
-    fun getAllTask() : Flow<List<Task>>
+    fun getAllTask(): Flow<List<Task>>
 
 }

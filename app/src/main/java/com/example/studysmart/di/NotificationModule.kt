@@ -22,9 +22,9 @@ object NotificationModule {
     @Provides
     fun provideNotificationBuilder(
         @ApplicationContext context: Context
-    ) : NotificationCompat.Builder{
+    ): NotificationCompat.Builder {
         return NotificationCompat
-            .Builder(context , NOTIFICATION_CHANNEL_ID)
+            .Builder(context, NOTIFICATION_CHANNEL_ID)
             .setContentTitle("Study Session")
             .setContentText("00:00:00")
             .setSmallIcon(R.drawable.studysmart)
@@ -36,7 +36,7 @@ object NotificationModule {
     @Provides
     fun provideNotification(
         @ApplicationContext context: Context
-    ) : NotificationManager{
+    ): NotificationManager {
         return context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     }
 }

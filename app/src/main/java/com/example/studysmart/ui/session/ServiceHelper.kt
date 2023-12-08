@@ -9,7 +9,7 @@ import com.example.studysmart.MainActivity
 import com.example.studysmart.util.Constants.CLICK_REQUEST_CODE
 
 object ServiceHelper {
-    fun clickPendingIntent(context: Context) : PendingIntent{
+    fun clickPendingIntent(context: Context): PendingIntent {
         val deepLinkIntent = Intent(
             Intent.ACTION_VIEW,
             "study_smart://dashboard/session".toUri(),
@@ -25,8 +25,8 @@ object ServiceHelper {
         }
     }
 
-    fun triggerForeGroundServiceI(context: Context , action : String){
-        Intent(context , StudySessionTimerService::class.java).apply {
+    fun triggerForeGroundServiceI(context: Context, action: String) {
+        Intent(context, StudySessionTimerService::class.java).apply {
             this.action = action
             context.startService(this)
         }

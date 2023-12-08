@@ -31,15 +31,15 @@ import javax.inject.Inject
 class SubjectScreenViewModel @Inject constructor(
     private val subjectRepository: SubjectRepository,
     private val taskRepository: TaskRepository,
-    private val sessionRepository : SessionRepository,
+    private val sessionRepository: SessionRepository,
     savedStateHandle: SavedStateHandle
-): ViewModel() {
+) : ViewModel() {
 
-    private val navArgs : SubjectScreenNavArgs = savedStateHandle.navArgs()
-
+    private val navArgs: SubjectScreenNavArgs = savedStateHandle.navArgs()
 
 
     private val _state = MutableStateFlow(SubjectState())
+
     //update the state as SubjectState()
     val state = combine(
         _state,
@@ -47,7 +47,7 @@ class SubjectScreenViewModel @Inject constructor(
         taskRepository.getCompletedTaskForSubject(navArgs.subjectId),
         sessionRepository.getRecentTenSessionForSubject(navArgs.subjectId),
         sessionRepository.getTotalSessionDurationBySubject(navArgs.subjectId),
-    ){state , upComingTask, completedTask , recentSession , totalSessionDuration->
+    ) { state, upComingTask, completedTask, recentSession, totalSessionDuration ->
         state.copy(
             upcomingTask = upComingTask,
             completedTask = completedTask,
@@ -60,21 +60,23 @@ class SubjectScreenViewModel @Inject constructor(
         initialValue = SubjectState()
     )
 
-    private val _snackBarEventFlow : MutableSharedFlow<SnackBarEvent> = MutableSharedFlow()
+    private val _snackBarEventFlow: MutableSharedFlow<SnackBarEvent> = MutableSharedFlow()
     val snackBarEventFlow = _snackBarEventFlow.asSharedFlow()
 
     init {
         fetchSubject()
     }
-    fun onEvent(event : SubjectEvent){
-        when(event){
+
+    fun onEvent(event: SubjectEvent) {
+        when (event) {
             is SubjectEvent.OnSubjectCardColorChange -> {
-                _state.update {subjectState ->
+                _state.update { subjectState ->
                     subjectState.copy(
                         subjectCardColor = event.color
                     )
                 }
             }
+
             is SubjectEvent.OnSubjectNameChange -> {
                 _state.update { subjectState ->
                     subjectState.copy(
@@ -82,22 +84,25 @@ class SubjectScreenViewModel @Inject constructor(
                     )
                 }
             }
+
             is SubjectEvent.OnGoalStudyHourChange -> {
-                _state.update {subjectState ->
+                _state.update { subjectState ->
                     subjectState.copy(
                         goalStudyHour = event.hours
                     )
                 }
             }
+
             SubjectEvent.UpdateSubject -> updateSubject()
             SubjectEvent.UpdateProgress -> {
                 val goalStudyHours = state.value.goalStudyHour.toFloatOrNull() ?: 1f
-                _state.update {subjectState->
+                _state.update { subjectState ->
                     subjectState.copy(
-                        progress = (state.value.studiedHours / goalStudyHours).coerceIn(0f,1f)
+                        progress = (state.value.studiedHours / goalStudyHours).coerceIn(0f, 1f)
                     )
                 }
             }
+
             SubjectEvent.DeleteSubject -> deleteSubject()
             is SubjectEvent.OnDeleteSessionButtonClick -> {
                 _state.update { subjectState ->
@@ -106,6 +111,7 @@ class SubjectScreenViewModel @Inject constructor(
                     )
                 }
             }
+
             SubjectEvent.DeleteSession -> deleteSession()
             is SubjectEvent.OnTaskCompleteChange -> {
                 updateTask(event.task)
@@ -124,8 +130,7 @@ class SubjectScreenViewModel @Inject constructor(
                         )
                     )
                 }
-            }
-            catch (e : Exception){
+            } catch (e: Exception) {
                 _snackBarEventFlow.emit(
                     SnackBarEvent.ShowSnackBar(
                         message = "Couldn't delete session ${e.message}",
@@ -139,21 +144,21 @@ class SubjectScreenViewModel @Inject constructor(
     private fun updateTask(task: Task) {
         viewModelScope.launch {
             try {
-                taskRepository.upsertTask(task = task.copy(
-                    isCompleted = !task.isCompleted
-                ))
+                taskRepository.upsertTask(
+                    task = task.copy(
+                        isCompleted = !task.isCompleted
+                    )
+                )
                 if (task.isCompleted) {
                     _snackBarEventFlow.emit(
                         SnackBarEvent.ShowSnackBar(message = "Saved in Upcoming task")
                     )
-                }
-                else{
+                } else {
                     _snackBarEventFlow.emit(
                         SnackBarEvent.ShowSnackBar(message = "Saved in completed task")
                     )
                 }
-            }
-            catch (e : Exception){
+            } catch (e: Exception) {
                 _snackBarEventFlow.emit(
                     SnackBarEvent.ShowSnackBar(
                         message = "couldn't update ${e.message}",
@@ -180,8 +185,7 @@ class SubjectScreenViewModel @Inject constructor(
                         message = "SuccessFully Updated"
                     )
                 )
-            }
-            catch (e : Exception){
+            } catch (e: Exception) {
                 _snackBarEventFlow.emit(
                     SnackBarEvent.ShowSnackBar(
                         message = "Couldn't update ${e.message}",
@@ -193,9 +197,9 @@ class SubjectScreenViewModel @Inject constructor(
         }
     }
 
-    private fun fetchSubject(){
+    private fun fetchSubject() {
         viewModelScope.launch {
-            subjectRepository.getSubjectById(navArgs.subjectId)?.let { subject->
+            subjectRepository.getSubjectById(navArgs.subjectId)?.let { subject ->
                 _state.update { subjectState ->
                     subjectState.copy(
                         subjectName = subject.name,
@@ -209,12 +213,12 @@ class SubjectScreenViewModel @Inject constructor(
     }
 
 
-    private fun deleteSubject(){
+    private fun deleteSubject() {
         viewModelScope.launch {
             try {
                 val currentSubjectId = state.value.currentSubjectId
                 if (currentSubjectId != null) {
-                    withContext(Dispatchers.IO){
+                    withContext(Dispatchers.IO) {
                         subjectRepository.deleteSubject(subjectId = currentSubjectId)
                     }
                     _snackBarEventFlow.emit(
@@ -223,16 +227,14 @@ class SubjectScreenViewModel @Inject constructor(
                         )
                     )
                     _snackBarEventFlow.emit(SnackBarEvent.NavigateUp)
-                }
-                else{
+                } else {
                     _snackBarEventFlow.emit(
                         SnackBarEvent.ShowSnackBar(
                             message = "No Subject To Delete"
                         )
                     )
                 }
-            }
-            catch (e : Exception){
+            } catch (e: Exception) {
                 _snackBarEventFlow.emit(
                     SnackBarEvent.ShowSnackBar(
                         message = "Couldn't delete subject {${e.message}}",

@@ -31,7 +31,7 @@ class TaskViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val navArgs : TaskScreenNavArgs = savedStateHandle.navArgs()
+    private val navArgs: TaskScreenNavArgs = savedStateHandle.navArgs()
 
     private val _state = MutableStateFlow(TaskState())
     val state = combine(
@@ -104,7 +104,7 @@ class TaskViewModel @Inject constructor(
             try {
                 val currentTaskId = state.value.currentTaskId
                 if (currentTaskId != null) {
-                    withContext(Dispatchers.IO){
+                    withContext(Dispatchers.IO) {
                         taskRepository.deleteTask(currentTaskId)
                     }
                     _snackBarEventFlow.emit(
@@ -116,8 +116,7 @@ class TaskViewModel @Inject constructor(
                         SnackBarEvent.NavigateUp
                     )
                 }
-            }
-            catch (e : Exception){
+            } catch (e: Exception) {
                 _snackBarEventFlow.emit(
                     SnackBarEvent.ShowSnackBar(
                         message = "Couldn't deleted ${e.message}"
@@ -159,8 +158,7 @@ class TaskViewModel @Inject constructor(
                 _snackBarEventFlow.emit(
                     SnackBarEvent.NavigateUp
                 )
-            }
-            catch (e : Exception){
+            } catch (e: Exception) {
                 _snackBarEventFlow.emit(
                     SnackBarEvent.ShowSnackBar(
                         message = "Couldn't save task ${e.message}",
@@ -171,10 +169,10 @@ class TaskViewModel @Inject constructor(
         }
     }
 
-    private fun fetchTask(){
+    private fun fetchTask() {
         viewModelScope.launch {
-            navArgs.taskId?.let {id->
-                taskRepository.getTaskById(id)?.let {task->
+            navArgs.taskId?.let { id ->
+                taskRepository.getTaskById(id)?.let { task ->
                     _state.update {
                         it.copy(
                             title = task.title,

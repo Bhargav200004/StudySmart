@@ -59,17 +59,17 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.collectLatest
 
 data class SubjectScreenNavArgs(
-    val subjectId : Int
+    val subjectId: Int
 )
 
 
-@Destination(navArgsDelegate = SubjectScreenNavArgs::class )
+@Destination(navArgsDelegate = SubjectScreenNavArgs::class)
 @Composable
 fun SubjectScreenRoute(
-    navigator : DestinationsNavigator
+    navigator: DestinationsNavigator
 ) {
 
-    val viewModel : SubjectScreenViewModel = hiltViewModel()
+    val viewModel: SubjectScreenViewModel = hiltViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     SubjectScreen(
@@ -81,8 +81,9 @@ fun SubjectScreenRoute(
         },
         onAddTaskButtonClick = {
             val navArgs = TaskScreenNavArgs(taskId = null, subjectId = state.currentSubjectId)
-            navigator.navigate(TaskScreenRouteDestination(navArgs)) },
-        onTaskCardClick = {taskId ->
+            navigator.navigate(TaskScreenRouteDestination(navArgs))
+        },
+        onTaskCardClick = { taskId ->
             val navArgs = TaskScreenNavArgs(taskId = taskId, subjectId = null)
             navigator.navigate(TaskScreenRouteDestination(navArgs))
         }
@@ -92,12 +93,12 @@ fun SubjectScreenRoute(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SubjectScreen(
-    state : SubjectState,
-    onEvent : (SubjectEvent) -> Unit,
-    snackBarEvent : SharedFlow<SnackBarEvent>,
-    onBackButtonClick : () -> Unit,
-    onAddTaskButtonClick : () -> Unit,
-    onTaskCardClick : (Int?) -> Unit
+    state: SubjectState,
+    onEvent: (SubjectEvent) -> Unit,
+    snackBarEvent: SharedFlow<SnackBarEvent>,
+    onBackButtonClick: () -> Unit,
+    onAddTaskButtonClick: () -> Unit,
+    onTaskCardClick: (Int?) -> Unit
 ) {
 
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
@@ -109,7 +110,7 @@ private fun SubjectScreen(
     var isDeleteButton by rememberSaveable { mutableStateOf(false) }
     var isDeleteSubjectButton by rememberSaveable { mutableStateOf(false) }
 
-    val snackBarHost = remember { SnackbarHostState()}
+    val snackBarHost = remember { SnackbarHostState() }
 
 
     AddSubjectDialog(
@@ -117,7 +118,7 @@ private fun SubjectScreen(
         subjectName = state.subjectName,
         goalHour = state.goalStudyHour,
         selectedColor = state.subjectCardColor,
-        onSubjectChange = {  onEvent(SubjectEvent.OnSubjectNameChange(it)) },
+        onSubjectChange = { onEvent(SubjectEvent.OnSubjectNameChange(it)) },
         onGoalHourChange = { onEvent(SubjectEvent.OnGoalStudyHourChange(it)) },
         onColorChange = { onEvent(SubjectEvent.OnSubjectCardColorChange(it)) },
         onDismissRequest = { isEditSubjectButton = false },
@@ -153,15 +154,16 @@ private fun SubjectScreen(
         }
     )
 
-    LaunchedEffect(key1 = true){
-        snackBarEvent.collectLatest {event->
-            when(event){
-                is SnackBarEvent.ShowSnackBar ->{
+    LaunchedEffect(key1 = true) {
+        snackBarEvent.collectLatest { event ->
+            when (event) {
+                is SnackBarEvent.ShowSnackBar -> {
                     snackBarHost.showSnackbar(
                         message = event.message,
                         duration = event.duration
                     )
                 }
+
                 SnackBarEvent.NavigateUp -> {
                     onBackButtonClick()
                 }
@@ -170,22 +172,22 @@ private fun SubjectScreen(
         }
     }
 
-    LaunchedEffect(key1 = state.studiedHours , key2 = state.goalStudyHour){
+    LaunchedEffect(key1 = state.studiedHours, key2 = state.goalStudyHour) {
         onEvent(SubjectEvent.UpdateProgress)
     }
 
     Scaffold(
-        snackbarHost = {SnackbarHost(hostState = snackBarHost)},
+        snackbarHost = { SnackbarHost(hostState = snackBarHost) },
         topBar = {
             SubjectScreenTopBar(
                 title = state.subjectName,
                 onBackButtonClick = onBackButtonClick,
-                onDeleteButtonClick = { isDeleteSubjectButton = true},
-                onEditButtonClick = { isEditSubjectButton = true},
+                onDeleteButtonClick = { isDeleteSubjectButton = true },
+                onEditButtonClick = { isEditSubjectButton = true },
                 scrollBehavior = scrollBehavior
             )
         },
-        floatingActionButton ={
+        floatingActionButton = {
             ExtendedFloatingActionButton(
                 onClick = onAddTaskButtonClick,
                 icon = {
@@ -194,7 +196,7 @@ private fun SubjectScreen(
                         contentDescription = "Add"
                     )
                 },
-                text = { Text(text = "Add Task")},
+                text = { Text(text = "Add Task") },
                 expanded = isFABExpanded
             )
 
@@ -213,7 +215,7 @@ private fun SubjectScreen(
                         .fillMaxWidth()
                         .padding(12.dp),
                     goalHour = state.goalStudyHour,
-                    studyHour =state.studiedHours.toString(),
+                    studyHour = state.studiedHours.toString(),
                     progress = state.progress
                 )
             }
@@ -222,7 +224,7 @@ private fun SubjectScreen(
                 emptyText = "You don't have upcoming task\n" +
                         "Click + in Subject task to add new task",
                 tasks = state.upcomingTask,
-                onCheckBoxClick = { onEvent(SubjectEvent.OnTaskCompleteChange(it))},
+                onCheckBoxClick = { onEvent(SubjectEvent.OnTaskCompleteChange(it)) },
                 onTaskCardClick = onTaskCardClick
             )
             item {
@@ -233,7 +235,7 @@ private fun SubjectScreen(
                 emptyText = "You don't have complete task\n" +
                         "Click the check box on completion of task",
                 tasks = state.completedTask,
-                onCheckBoxClick = { onEvent(SubjectEvent.OnTaskCompleteChange(it))},
+                onCheckBoxClick = { onEvent(SubjectEvent.OnTaskCompleteChange(it)) },
                 onTaskCardClick = onTaskCardClick
             )
             item {
@@ -258,10 +260,10 @@ private fun SubjectScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SubjectScreenTopBar(
-    title : String,
-    onBackButtonClick : () -> Unit,
-    onDeleteButtonClick : () -> Unit,
-    onEditButtonClick : () -> Unit,
+    title: String,
+    onBackButtonClick: () -> Unit,
+    onDeleteButtonClick: () -> Unit,
+    onEditButtonClick: () -> Unit,
     scrollBehavior: TopAppBarScrollBehavior
 ) {
     LargeTopAppBar(
@@ -302,16 +304,16 @@ private fun SubjectScreenTopBar(
 @Composable
 private fun SubjectOverViewSection(
     modifier: Modifier,
-    goalHour :String,
+    goalHour: String,
     studyHour: String,
-    progress : Float
+    progress: Float
 ) {
 
-    val progressToPercentage = remember(progress){
-        (progress * 100).toInt().coerceIn(0,100)
+    val progressToPercentage = remember(progress) {
+        (progress * 100).toInt().coerceIn(0, 100)
     }
 
-    Row (
+    Row(
         modifier = modifier,
         horizontalArrangement = Arrangement.SpaceAround,
         verticalAlignment = Alignment.CenterVertically
@@ -333,7 +335,7 @@ private fun SubjectOverViewSection(
         Box(
             modifier = Modifier.size(75.dp),
             contentAlignment = Alignment.Center
-        ){
+        ) {
             CircularProgressIndicator(
                 modifier = Modifier
                     .fillMaxSize(),

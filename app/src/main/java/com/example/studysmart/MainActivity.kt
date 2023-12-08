@@ -12,11 +12,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.graphics.toArgb
 import androidx.core.app.ActivityCompat
-import com.example.studysmart.domain.model.Session
-import com.example.studysmart.domain.model.Subject
-import com.example.studysmart.domain.model.Task
 import com.example.studysmart.ui.NavGraphs
 import com.example.studysmart.ui.destinations.SessionScreenRouteDestination
 import com.example.studysmart.ui.session.StudySessionTimerService
@@ -30,9 +26,9 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     private var isBound by mutableStateOf(false)
-    private lateinit var timeService : StudySessionTimerService
+    private lateinit var timeService: StudySessionTimerService
 
-    private val connection = object : ServiceConnection{
+    private val connection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             val binder = service as StudySessionTimerService.StudySessionTimeBinder
             timeService = binder.getServices()
@@ -47,8 +43,8 @@ class MainActivity : ComponentActivity() {
 
     override fun onStart() {
         super.onStart()
-        Intent(this,StudySessionTimerService::class.java).also {intent ->
-            bindService(intent,connection, Context.BIND_AUTO_CREATE)
+        Intent(this, StudySessionTimerService::class.java).also { intent ->
+            bindService(intent, connection, Context.BIND_AUTO_CREATE)
         }
     }
 
@@ -62,7 +58,7 @@ class MainActivity : ComponentActivity() {
                     DestinationsNavHost(
                         navGraph = NavGraphs.root,
                         dependenciesContainerBuilder = {
-                            dependency(SessionScreenRouteDestination){
+                            dependency(SessionScreenRouteDestination) {
                                 timeService
                             }
                         }
@@ -74,7 +70,7 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun requestPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             ActivityCompat.requestPermissions(
                 this,
                 arrayOf(android.Manifest.permission.POST_NOTIFICATIONS),

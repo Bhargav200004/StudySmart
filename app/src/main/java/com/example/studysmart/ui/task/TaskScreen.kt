@@ -63,18 +63,18 @@ import java.time.Instant
 
 
 data class TaskScreenNavArgs(
-    val taskId : Int?,
-    val subjectId : Int?
+    val taskId: Int?,
+    val subjectId: Int?
 )
 
 @Destination(navArgsDelegate = TaskScreenNavArgs::class)
 @Composable
-fun TaskScreenRoute(navigator : DestinationsNavigator) {
+fun TaskScreenRoute(navigator: DestinationsNavigator) {
 
-    val viewModel : TaskViewModel = hiltViewModel()
+    val viewModel: TaskViewModel = hiltViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    TaskScreen (
+    TaskScreen(
         state = state,
         snackBarEvent = viewModel.snackBarEventFlow,
         onEvent = viewModel::onEvent,
@@ -87,24 +87,23 @@ fun TaskScreenRoute(navigator : DestinationsNavigator) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun TaskScreen(
-    state : TaskState,
-    snackBarEvent : SharedFlow<SnackBarEvent>,
-    onEvent : (TaskEvent) -> Unit,
-    onBackButtonClick : () -> Unit
+    state: TaskState,
+    snackBarEvent: SharedFlow<SnackBarEvent>,
+    onEvent: (TaskEvent) -> Unit,
+    onBackButtonClick: () -> Unit
 ) {
 
     val scope = rememberCoroutineScope()
 
-    var isDeleteDialog by rememberSaveable { mutableStateOf(false)}
+    var isDeleteDialog by rememberSaveable { mutableStateOf(false) }
 
     val sheetState = rememberModalBottomSheetState()
-    var isDismissSubjectListBottomSheet by rememberSaveable { mutableStateOf(false)}
+    var isDismissSubjectListBottomSheet by rememberSaveable { mutableStateOf(false) }
 
     var isOpenDatePicker by rememberSaveable { mutableStateOf(false) }
     val datePickerState = rememberDatePickerState(
         initialSelectedDateMillis = Instant.now().toEpochMilli()
     )
-
 
 
     var taskTitleError by rememberSaveable { mutableStateOf<String?>(null) }
@@ -119,7 +118,7 @@ private fun TaskScreen(
         isOpen = isDeleteDialog,
         title = "Delete Task?",
         bodyText = "Are you sure you want to delete task?"
-        +"This action cannot be undone",
+                + "This action cannot be undone",
         onDismissRequest = { isDeleteDialog = false },
         onSaveRequest = {
             onEvent(TaskEvent.DeleteTask)
@@ -141,7 +140,7 @@ private fun TaskScreen(
         sheetState = sheetState,
         isOpen = isDismissSubjectListBottomSheet,
         subjects = state.subject,
-        onSubjectClick = {subject->
+        onSubjectClick = { subject ->
             scope.launch {
                 sheetState.hide()
             }.invokeOnCompletion {
@@ -149,20 +148,21 @@ private fun TaskScreen(
             }
             onEvent(TaskEvent.OnRelatedSubjectSelected(subject = subject))
         },
-        onDismissRequest ={isDismissSubjectListBottomSheet = false}
+        onDismissRequest = { isDismissSubjectListBottomSheet = false }
     )
 
-    val snackBarHostState = remember{ SnackbarHostState()}
+    val snackBarHostState = remember { SnackbarHostState() }
 
-    LaunchedEffect(key1 = true){
-        snackBarEvent.collectLatest { event->
-            when(event){
+    LaunchedEffect(key1 = true) {
+        snackBarEvent.collectLatest { event ->
+            when (event) {
                 is SnackBarEvent.ShowSnackBar -> {
                     snackBarHostState.showSnackbar(
                         message = event.message,
                         duration = event.duration
                     )
                 }
+
                 SnackBarEvent.NavigateUp -> {
                     onBackButtonClick()
                 }
@@ -196,7 +196,7 @@ private fun TaskScreen(
                 modifier = Modifier
                     .fillMaxWidth(),
                 value = state.title,
-                onValueChange = {  onEvent(TaskEvent.OnTitleChange(it)) },
+                onValueChange = { onEvent(TaskEvent.OnTitleChange(it)) },
                 label = { Text(text = "Title") },
                 singleLine = true,
                 isError = taskTitleError != null && state.title.isNotBlank(),
@@ -225,7 +225,7 @@ private fun TaskScreen(
                     text = state.dueDate.changeMillsToDateString(),
                     style = MaterialTheme.typography.bodyLarge
                 )
-                IconButton(onClick = { isOpenDatePicker = true  }) {
+                IconButton(onClick = { isOpenDatePicker = true }) {
                     Icon(
                         imageVector = Icons.Default.DateRange,
                         contentDescription = "Date Button"
@@ -253,7 +253,7 @@ private fun TaskScreen(
                         labelColor = if (priority == state.priority) {
                             Color.White
                         } else Color.White.copy(alpha = 0.7f),
-                        onClick = {onEvent(TaskEvent.OnPriorityChange(priority = priority))}
+                        onClick = { onEvent(TaskEvent.OnPriorityChange(priority = priority)) }
                     )
                 }
             }

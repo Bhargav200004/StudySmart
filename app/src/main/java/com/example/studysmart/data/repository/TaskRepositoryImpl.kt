@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class TaskRepositoryImpl @Inject constructor(
-    private val taskDoa : TaskDao
+    private val taskDoa: TaskDao
 ) : TaskRepository {
     override suspend fun upsertTask(task: Task) {
         taskDoa.upsertTask(task)

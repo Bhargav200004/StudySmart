@@ -7,13 +7,13 @@ interface SubjectRepository {
 
     suspend fun upsertSubject(subject: Subject)
 
-     fun getTotalSubjectCount():Flow<Int>
+    fun getTotalSubjectCount(): Flow<Int>
 
-     fun getTotalGoalHour () : Flow<Float>
+    fun getTotalGoalHour(): Flow<Float>
 
-     suspend fun deleteSubject(subjectId : Int)
+    suspend fun deleteSubject(subjectId: Int)
 
-     suspend fun getSubjectById(subjectId : Int) : Subject?
+    suspend fun getSubjectById(subjectId: Int): Subject?
 
-     fun getAllSubject() : Flow<List<Subject>>
+    fun getAllSubject(): Flow<List<Subject>>
 }

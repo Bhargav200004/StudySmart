@@ -24,14 +24,14 @@ import javax.inject.Inject
 class SessionViewModel @Inject constructor(
     subjectRepository: SubjectRepository,
     private val sessionRepository: SessionRepository
-): ViewModel() {
+) : ViewModel() {
 
     private val _state = MutableStateFlow(SessionStates())
     val state = combine(
         _state,
         subjectRepository.getAllSubject(),
         sessionRepository.getAllSession()
-    ){state , subjects, session->
+    ) { state, subjects, session ->
         state.copy(
             subjects = subjects,
             sessions = session
@@ -43,10 +43,10 @@ class SessionViewModel @Inject constructor(
     )
 
     private val _snackBarEventFlow = MutableSharedFlow<SnackBarEvent>()
-    val snackBarEventFlow  = _snackBarEventFlow.asSharedFlow()
+    val snackBarEventFlow = _snackBarEventFlow.asSharedFlow()
 
-    fun onEvent(event : SessionEvents){
-        when (event){
+    fun onEvent(event: SessionEvents) {
+        when (event) {
             SessionEvents.NotifyToUpdateSubject -> notifyToUpdateSubject()
             SessionEvents.DeleteSession -> deleteSession()
             is SessionEvents.OnDeleteButtonClick -> {
@@ -54,6 +54,7 @@ class SessionViewModel @Inject constructor(
                     it.copy(session = event.session)
                 }
             }
+
             is SessionEvents.OnRelatedSubjectChange -> {
                 _state.update {
                     it.copy(
@@ -62,6 +63,7 @@ class SessionViewModel @Inject constructor(
                     )
                 }
             }
+
             is SessionEvents.SaveSession -> insertSession(event.duration)
             is SessionEvents.UpdateSubjectIdAndRelatedSubject -> {
                 _state.update {
@@ -86,7 +88,7 @@ class SessionViewModel @Inject constructor(
         }
     }
 
-    private fun deleteSession(){
+    private fun deleteSession() {
         viewModelScope.launch {
             try {
                 state.value.session?.let { session ->
@@ -95,10 +97,12 @@ class SessionViewModel @Inject constructor(
                         SnackBarEvent.ShowSnackBar(message = "session delete successfully")
                     )
                 }
-            }
-            catch (e : Exception){
+            } catch (e: Exception) {
                 _snackBarEventFlow.emit(
-                    SnackBarEvent.ShowSnackBar(message = "couldn't delete session", duration = SnackbarDuration.Long),
+                    SnackBarEvent.ShowSnackBar(
+                        message = "couldn't delete session",
+                        duration = SnackbarDuration.Long
+                    ),
                 )
             }
         }
@@ -106,7 +110,7 @@ class SessionViewModel @Inject constructor(
 
     private fun insertSession(duration: Long) {
         viewModelScope.launch {
-            if (duration < 36){
+            if (duration < 36) {
                 _snackBarEventFlow.emit(
                     SnackBarEvent.ShowSnackBar(
                         message = "Single session cannot be less than 36 second"
@@ -129,8 +133,7 @@ class SessionViewModel @Inject constructor(
                         message = "Session Save Successfully"
                     )
                 )
-            }
-            catch (e :Exception){
+            } catch (e: Exception) {
                 _snackBarEventFlow.emit(
                     SnackBarEvent.ShowSnackBar(
                         message = "Couldn't save session ${e.message}",

@@ -14,12 +14,12 @@ import java.time.ZoneId
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TaskDatePickerDialog(
-    state : DatePickerState,
-    isOpen : Boolean,
-    confirmButtonText : String = "Ok",
-    dismissButtonText : String = "Cancel",
-    onDismissRequest : () -> Unit,
-    onConfirmButtonClicked : () -> Unit
+    state: DatePickerState,
+    isOpen: Boolean,
+    confirmButtonText: String = "Ok",
+    dismissButtonText: String = "Cancel",
+    onDismissRequest: () -> Unit,
+    onConfirmButtonClicked: () -> Unit
 
 ) {
 

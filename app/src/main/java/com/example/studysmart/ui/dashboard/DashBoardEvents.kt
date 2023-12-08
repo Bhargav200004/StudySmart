@@ -5,7 +5,7 @@ import com.example.studysmart.domain.model.Session
 import com.example.studysmart.domain.model.Task
 
 
-sealed class DashBoardEvents{
+sealed class DashBoardEvents {
     data object SaveSubject : DashBoardEvents()
 
     data object DeleteSession : DashBoardEvents()
@@ -14,10 +14,10 @@ sealed class DashBoardEvents{
 
     data class OnTaskIsCompleteChange(val task: Task) : DashBoardEvents()
 
-    data class OnSubjectCardColorChange(val colors : List<Color>) : DashBoardEvents()
+    data class OnSubjectCardColorChange(val colors: List<Color>) : DashBoardEvents()
 
-    data class OnSubjectNameChange(val name : String) : DashBoardEvents()
+    data class OnSubjectNameChange(val name: String) : DashBoardEvents()
 
-    data class OnGoalStudyHoursChange(val hours : String) : DashBoardEvents()
+    data class OnGoalStudyHoursChange(val hours: String) : DashBoardEvents()
 
 }

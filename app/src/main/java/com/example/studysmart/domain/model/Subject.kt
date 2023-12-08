@@ -11,13 +11,13 @@ import com.example.studysmart.ui.theme.gradient4
 
 @Entity
 data class Subject(
-    val name : String,
-    val goalHours : Float,
-    val colors : List<Int>,
+    val name: String,
+    val goalHours: Float,
+    val colors: List<Int>,
     @PrimaryKey(autoGenerate = true)
-    val subjectId : Int? = null
-){
-    companion object{
+    val subjectId: Int? = null
+) {
+    companion object {
         val subjectCardColor = listOf(
             gradient0,
             gradient1,

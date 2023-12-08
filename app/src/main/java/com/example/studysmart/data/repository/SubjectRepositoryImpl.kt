@@ -9,9 +9,9 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class SubjectRepositoryImpl @Inject constructor(
-    private val subjectDoa : SubjectDao,
-    private val taskDao : TaskDao,
-    private val sessionDao : SessionDao
+    private val subjectDoa: SubjectDao,
+    private val taskDao: TaskDao,
+    private val sessionDao: SessionDao
 ) : SubjectRepository {
     override suspend fun upsertSubject(subject: Subject) {
         subjectDoa.upsertSubject(subject)

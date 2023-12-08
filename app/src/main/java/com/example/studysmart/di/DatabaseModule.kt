@@ -21,7 +21,7 @@ object DatabaseModule {
     @Singleton
     fun provideDatabase(
         application: Application
-    ) : AppDatabase {
+    ): AppDatabase {
         return Room
             .databaseBuilder(
                 application,
@@ -35,19 +35,19 @@ object DatabaseModule {
 
     @Provides
     @Singleton
-    fun provideSubjectDao(database : AppDatabase) : SubjectDao{
+    fun provideSubjectDao(database: AppDatabase): SubjectDao {
         return database.subjectDao()
     }
 
     @Provides
     @Singleton
-    fun provideTaskDao(database : AppDatabase) : TaskDao{
+    fun provideTaskDao(database: AppDatabase): TaskDao {
         return database.taskDao()
     }
 
     @Provides
     @Singleton
-    fun provideSessionDao(database : AppDatabase) : SessionDao{
+    fun provideSessionDao(database: AppDatabase): SessionDao {
         return database.sessionDao()
     }
 
