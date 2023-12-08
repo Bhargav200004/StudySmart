@@ -141,6 +141,16 @@ private fun SessionScreen(
         }
     }
 
+    LaunchedEffect(key1 = state.subjectId){
+        val subjectId = timerService.subjectId.value
+        onEvents(
+            SessionEvents.UpdateSubjectIdAndRelatedSubject(
+                subjectId = subjectId,
+                relatedToSubject = state.subjects.find { it.subjectId == subjectId } ?.name
+            )
+        )
+    }
+
     SubjectListBottomSheet(
         sheetState = sheetState,
         isOpen = isDismissSubjectListBottomSheet,
@@ -201,7 +211,8 @@ private fun SessionScreen(
                         .fillMaxWidth()
                         .padding(horizontal = 12.dp),
                     relatedToSubject = state.relatedToSubject?: "",
-                    selectSubjectButtonClick = { isDismissSubjectListBottomSheet = true }
+                    selectSubjectButtonClick = { isDismissSubjectListBottomSheet = true },
+                    second = seconds
                 )
             }
 
@@ -221,15 +232,20 @@ private fun SessionScreen(
                             )
                         },
                         startButtonClick = {
-                            ServiceHelper.triggerForeGroundServiceI(
-                                context = context,
-                                action = if (currentTimeState == TimerState.STARTED) {
-                                    ACTION_SERVICE_STOP
-                                }
-                                else {
-                                    ACTION_SERVICE_START
-                                }
-                            )
+                            if (state.subjectId != null && state.relatedToSubject != null) {
+                                ServiceHelper.triggerForeGroundServiceI(
+                                    context = context,
+                                    action = if (currentTimeState == TimerState.STARTED) {
+                                        ACTION_SERVICE_STOP
+                                    } else {
+                                        ACTION_SERVICE_START
+                                    }
+                                )
+                                timerService.subjectId.value = state.subjectId
+                            }
+                            else{
+                                onEvents(SessionEvents.NotifyToUpdateSubject)
+                            }
                         },
                         finishButtonClick = {
                             val duration = timerService.duration.toLong(DurationUnit.SECONDS)
@@ -346,7 +362,8 @@ private fun TimerSection(
 private fun RelatedToStudySession(
     modifier: Modifier,
     relatedToSubject: String,
-    selectSubjectButtonClick: () -> Unit
+    selectSubjectButtonClick: () -> Unit,
+    second : String
 ) {
     Column(
         modifier = modifier
@@ -365,7 +382,10 @@ private fun RelatedToStudySession(
                 text = relatedToSubject,
                 style = MaterialTheme.typography.bodyLarge
             )
-            IconButton(onClick = selectSubjectButtonClick) {
+            IconButton(
+                onClick = selectSubjectButtonClick,
+                enabled = second == "00"
+            ) {
                 Icon(
                     imageVector = Icons.Default.ArrowDropDown,
                     contentDescription = "Arrow Drop down"
