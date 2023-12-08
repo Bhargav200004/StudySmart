@@ -141,12 +141,12 @@ private fun SessionScreen(
         }
     }
 
-    LaunchedEffect(key1 = state.subjectId){
+    LaunchedEffect(key1 = state.subjects){
         val subjectId = timerService.subjectId.value
         onEvents(
             SessionEvents.UpdateSubjectIdAndRelatedSubject(
                 subjectId = subjectId,
-                relatedToSubject = state.subjects.find { it.subjectId == subjectId } ?.name
+                relatedToSubject = state.subjects.find { it.subjectId == subjectId }?.name
             )
         )
     }
@@ -155,6 +155,9 @@ private fun SessionScreen(
         sheetState = sheetState,
         isOpen = isDismissSubjectListBottomSheet,
         subjects = state.subjects,
+        onDismissRequest = {
+            isDismissSubjectListBottomSheet = false
+        },
         onSubjectClick = { subject ->
             scope.launch {
                 sheetState.hide()
@@ -162,9 +165,6 @@ private fun SessionScreen(
                 if (!sheetState.isVisible) isDismissSubjectListBottomSheet = false
             }
             onEvents(SessionEvents.OnRelatedSubjectChange(subject))
-        },
-        onDismissRequest = {
-            isDismissSubjectListBottomSheet = false
         }
     )
 
@@ -237,9 +237,7 @@ private fun SessionScreen(
                                     context = context,
                                     action = if (currentTimeState == TimerState.STARTED) {
                                         ACTION_SERVICE_STOP
-                                    } else {
-                                        ACTION_SERVICE_START
-                                    }
+                                    } else ACTION_SERVICE_START
                                 )
                                 timerService.subjectId.value = state.subjectId
                             }
@@ -418,7 +416,7 @@ private fun ButtonSection(
                 )
             ) {
                 Text(
-                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
+                    modifier = Modifier.padding(horizontal = 5.dp, vertical = 5.dp),
                     text = when(timerState){
                         TimerState.STOPPED -> "Resume"
                         TimerState.STARTED -> "Stop"
@@ -431,7 +429,7 @@ private fun ButtonSection(
                 enabled = seconds !="00" && timerState != TimerState.STARTED
             ) {
                 Text(
-                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
+                    modifier = Modifier.padding(horizontal = 5.dp, vertical = 5.dp),
                     text = "Cancel"
                 )
             }
@@ -440,7 +438,7 @@ private fun ButtonSection(
                 enabled = seconds != "00" && timerState != TimerState.STARTED
             ) {
                 Text(
-                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
+                    modifier = Modifier.padding(horizontal = 5.dp, vertical = 5.dp),
                     text = "finish"
                 )
             }

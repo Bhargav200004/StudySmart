@@ -27,7 +27,7 @@ object NotificationModule {
             .Builder(context , NOTIFICATION_CHANNEL_ID)
             .setContentTitle("Study Session")
             .setContentText("00:00:00")
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setSmallIcon(R.drawable.studysmart)
             .setOngoing(true)
             .setContentIntent(ServiceHelper.clickPendingIntent(context))
     }

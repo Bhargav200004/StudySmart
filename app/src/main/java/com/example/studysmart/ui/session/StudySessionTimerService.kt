@@ -24,15 +24,15 @@ import kotlin.time.Duration.Companion.seconds
 import com.example.studysmart.util.pad
 
 @AndroidEntryPoint
-class StudySessionTimerService : Service(){
+class StudySessionTimerService : Service() {
 
     @Inject
     lateinit var notificationManager: NotificationManager
 
     @Inject
-    lateinit var notificationBuilder : NotificationCompat.Builder
+    lateinit var notificationBuilder: NotificationCompat.Builder
 
-    private lateinit var timer : Timer
+    private lateinit var timer: Timer
 
     private val binder = StudySessionTimeBinder()
 
@@ -47,23 +47,24 @@ class StudySessionTimerService : Service(){
     var currentTimerState = mutableStateOf(TimerState.IDLE)
         private set
 
-    var subjectId  = mutableStateOf<Int?>(null)
-
+    var subjectId = mutableStateOf<Int?>(null)
 
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         intent?.action.let {
-            when(it){
+            when (it) {
                 ACTION_SERVICE_START -> {
                     startForeGroundService()
-                    startTimer{ hours , minutes ,seconds ->
-                        updateContent(hour = hours , minute = minutes , seconds = seconds)
+                    startTimer { hours, minutes, seconds ->
+                        updateContent(hour = hours, minute = minutes, seconds = seconds)
                     }
                 }
+
                 ACTION_SERVICE_STOP -> {
                     stopTimer()
                 }
-                ACTION_SERVICE_CANCEL ->{
+
+                ACTION_SERVICE_CANCEL -> {
                     stopTimer()
                     cancelTimer()
                     stopForeGroundService()
@@ -98,50 +99,50 @@ class StudySessionTimerService : Service(){
         }
     }
 
-    private fun stopForeGroundService(){
+    private fun stopForeGroundService() {
         notificationManager.cancel(NOTIFICATION_ID)
         stopForeground(STOP_FOREGROUND_REMOVE)
         stopSelf()
     }
 
 
-    private fun updateContent(hour : String ,minute : String , seconds : String){
-            notificationManager
-                .notify(
-                    NOTIFICATION_ID,
-                    notificationBuilder
-                        .setContentText("$hour:$minute:$seconds")
-                        .build()
-                )
+    private fun updateContent(hour: String, minute: String, seconds: String) {
+        notificationManager
+            .notify(
+                NOTIFICATION_ID,
+                notificationBuilder
+                    .setContentText("$hour:$minute:$seconds")
+                    .build()
+            )
 
     }
 
-    private fun startTimer (
-        onTick : (h : String , m : String , s : String) -> Unit
-    ){
+    private fun startTimer(
+        onTick: (h: String, m: String, s: String) -> Unit
+    ) {
         currentTimerState.value = TimerState.STARTED
-        timer = fixedRateTimer(initialDelay = 1000L , period = 1000L){
+        timer = fixedRateTimer(initialDelay = 1000L, period = 1000L) {
             duration = duration.plus(1.seconds)
             updateTimeUnits()
-            onTick(hours.value,minutes.value,seconds.value)
+            onTick(hours.value, minutes.value, seconds.value)
         }
     }
 
-    private fun stopTimer(){
-        if (this::timer.isInitialized){
+    private fun stopTimer() {
+        if (this::timer.isInitialized) {
             timer.cancel()
         }
         currentTimerState.value = TimerState.STOPPED
     }
 
-    private fun cancelTimer(){
+    private fun cancelTimer() {
         duration = Duration.ZERO
         updateTimeUnits()
         currentTimerState.value = TimerState.IDLE
     }
 
-    private fun updateTimeUnits(){
-        duration.toComponents{ hours, minutes, seconds, _ ->
+    private fun updateTimeUnits() {
+        duration.toComponents { hours, minutes, seconds, _ ->
             this@StudySessionTimerService.hours.value = hours.pad()
             this@StudySessionTimerService.minutes.value = minutes.pad()
             this@StudySessionTimerService.seconds.value = seconds.pad()
@@ -149,14 +150,14 @@ class StudySessionTimerService : Service(){
     }
 
 
-    inner class StudySessionTimeBinder : Binder(){
-        fun getServices() : StudySessionTimerService = this@StudySessionTimerService
+    inner class StudySessionTimeBinder : Binder() {
+        fun getServices(): StudySessionTimerService = this@StudySessionTimerService
     }
 
 }
 
 
-enum class TimerState{
+enum class TimerState {
     IDLE,
     STARTED,
     STOPPED

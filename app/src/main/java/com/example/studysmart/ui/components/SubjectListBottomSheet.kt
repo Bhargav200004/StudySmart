@@ -29,9 +29,10 @@ fun SubjectListBottomSheet(
     isOpen: Boolean,
     subjects: List<Subject>,
     bottomSheetTittle: String = "Related to subject",
-    onSubjectClick: (Subject) -> Unit,
-    onDismissRequest: () -> Unit
+    onDismissRequest: () -> Unit,
+    onSubjectClick: (Subject) -> Unit
 ) {
+
 
     if (isOpen) {
         ModalBottomSheet(

@@ -76,7 +76,7 @@ class SessionViewModel @Inject constructor(
 
     private fun notifyToUpdateSubject() {
         viewModelScope.launch {
-            if (state.value.subjectId == null && state.value.relatedToSubject == null) {
+            if (state.value.subjectId == null || state.value.relatedToSubject == null) {
                 _snackBarEventFlow.emit(
                     SnackBarEvent.ShowSnackBar(
                         message = "Please select subject related to session"
