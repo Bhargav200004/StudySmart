@@ -135,7 +135,7 @@ class DashBoardViewModel @Inject constructor(
                 )
                 _snackBarEventFlow.emit(
                     SnackBarEvent.ShowSnackBar(
-                        message = "Saved in Upcoming task"
+                        message = "Saved in Completed task"
                     )
                 )
             } catch (e: Exception) {
