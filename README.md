@@ -1,6 +1,13 @@
 # StudySmart
 ![Compose Version](https://img.shields.io/badge/Compose-1.5.1-brightgreen)
 
+
+## ScreenShort
+|  |  |   |
+| :---:                              | :---:                             | :---:                              |
+| ![](StudySmartScreenShort1.png)  | ![](StudySmartScreenShort1.png) | ![](StudySmartScreenShort1.png)  |
+
+
 ## "The app offers the  following Packages:"
 
 - Room database (https://developer.android.com/training/data-storage/room)
