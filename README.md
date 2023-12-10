@@ -6,7 +6,7 @@
 |  |  |   |
 | :---:                              | :---:                             | :---:                              |
 | ![](StudySmartScreenShort1.png)  | ![](StudySmartScreenShot2.png) | ![](StudySmartScreenShort3.png)  |
-| ![](StudySmartScreenShort4.png)  | ![](StudySmartScreenShot5.png) | ![](StudySmartScreenShort6.png)  |
+| ![](StudySmartScreenShort4.png)  | ![](StudySmartScreenShort5.png) | ![](StudySmartScreenShort6.png)  |
 
 
 ## "The app offers the  following Packages:"
